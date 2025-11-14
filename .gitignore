@@ -11,7 +11,10 @@ code/
 # ========================
 # Outputs (분석 결과)
 # ========================
-outputs/
+outputs/*
+# Exception: Keep pilot sample data for tutorials
+!outputs/pilot
+!outputs/pilot/**
 
 # ========================
 # Scratch/Temp

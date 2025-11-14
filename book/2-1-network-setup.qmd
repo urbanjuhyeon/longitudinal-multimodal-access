@@ -1,4 +1,4 @@
-# Network Setup and Parameters {#sec-network-setup}
+# Getting Started with R5R {#sec-network-setup}
 
 ::: {.callout-note appearance="simple"}
 ## Part II: Methodology Development
@@ -8,11 +8,79 @@ The next four chapters demonstrate the complete R5R accessibility workflow using
 
 ## Introduction
 
-Before conducting accessibility analysis, we must build a multimodal transportation network and configure routing parameters. This chapter demonstrates network setup using R5R, which combines OpenStreetMap road networks and GTFS transit data into a unified routing engine.
+This chapter walks you through your first accessibility analysis with R5R. You'll learn how to download sample data, build a multimodal transportation network, and configure routing parameters. By the end, you'll have a working R5R network ready for accessibility calculations.
+
+## Prerequisites
+
+Before starting, ensure you have R5R installed:
+
+```{r}
+#| label: install-r5r
+#| eval: false
+
+# Install from CRAN
+install.packages("r5r")
+
+# Or install development version from GitHub
+# remotes::install_github("ipeaGIT/r5r")
+```
+
+::: {.callout-note}
+## Java Requirement
+R5R requires Java 21 or higher. Check your Java version with `system("java -version")` in R.
+:::
+
+## Downloading Sample Data
+
+We provide preprocessed sample data for Suwon's Paldal-gu district (2021) to help you get started quickly. This includes:
+
+- **OSM road network** (`osm_2021_paldal.osm.pbf`, 1.5MB)
+- **GTFS transit data** (`gtfs_2021_paldal.zip`, 13MB)
+
+### Option 1: Download via R
+
+```{r}
+#| label: download-data
+#| eval: false
+
+# Create data directory
+dir.create("pilot_data", showWarnings = FALSE)
+
+# Base URL for GitHub repository
+base_url <- "https://github.com/urbanjuhyeon/longitudinal-multimodal-access/raw/main/outputs/pilot/data/"
+
+# Download OSM file
+download.file(
+  url = paste0(base_url, "osm_2021_paldal.osm.pbf"),
+  destfile = "pilot_data/osm_2021_paldal.osm.pbf",
+  mode = "wb"
+)
+
+# Download GTFS file
+download.file(
+  url = paste0(base_url, "gtfs_2021_paldal.zip"),
+  destfile = "pilot_data/gtfs_2021_paldal.zip",
+  mode = "wb"
+)
+```
+
+### Option 2: Manual Download
+
+Visit the [data folder on GitHub](https://github.com/urbanjuhyeon/longitudinal-multimodal-access/tree/main/outputs/pilot/data) and download:
+
+1. `osm_2021_paldal.osm.pbf`
+2. `gtfs_2021_paldal.zip`
+
+Place both files in a `pilot_data/` directory in your working directory.
+
+::: {.callout-tip}
+## Using Your Own Data
+To analyze your own region, see Chapter 2 for preprocessing instructions. You'll need to obtain OSM data from [Geofabrik](https://download.geofabrik.de/) and GTFS data from your local transit agency.
+:::
 
 ## Building the R5R Network
 
-R5R constructs a multimodal network from the preprocessed data files we created in Chapter 2.
+With the data downloaded, we can now build the multimodal transportation network. R5R combines the OSM road network and GTFS transit schedules into a unified routing graph.
 
 ```{r}
 #| label: setup-r5r
@@ -20,12 +88,9 @@ R5R constructs a multimodal network from the preprocessed data files we created 
 
 library(r5r)
 
-# Set paths
-pilot_data_dir <- "outputs/pilot/data"
-
-# Build network
+# Build network from downloaded data
 r5r_core <- setup_r5(
-  data_path = pilot_data_dir,
+  data_path = "pilot_data",
   verbose = TRUE,
   overwrite = TRUE
 )
@@ -146,8 +211,9 @@ Our pilot test uses Paldal-gu (Suwon) with 1,500m buffer:
 
 This chapter established:
 
+- ✓ How to download and set up sample data
 - ✓ R5R network building procedure
 - ✓ Key parameter definitions and their impacts
 - ✓ Pilot study area characteristics
 
-With the network built and parameters configured, we proceed to test three Origin-Destination patterns in the following chapters.
+With the network built and parameters configured, you're ready to compute accessibility metrics in the following chapters.
