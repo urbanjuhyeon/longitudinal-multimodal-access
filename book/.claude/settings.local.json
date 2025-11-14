@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(quarto preview:*)",
+      "Read(//c/workspace/longitudinal-access/code/**)",
+      "Bash(ren:*)",
+      "Bash(ren \"10-parallel-processing.qmd\" \"09-parallel-processing.qmd\")",
+      "Bash(ren \"11-aggregating-data.qmd\" \"10-aggregating-data.qmd\")",
+      "Bash(mv:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

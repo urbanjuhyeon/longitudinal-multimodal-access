@@ -1,0 +1,35 @@
+# Preparing Analysis Datasets {#sec-data-preparation}
+
+## Introduction
+
+With the research context established in Chapter 7, we now turn to **data preparation**—the unglamorous but critical foundation of large-scale accessibility analysis.
+
+This chapter covers:
+
+- **Bank location data**: Geocoding 5,000+ branches across 13 time periods
+- **Transit networks**: Preparing national GTFS feeds for R5R
+- **Census geographies**: Processing enumeration district boundaries and demographics
+- **Data integration**: Creating analysis-ready origin-destination pairs
+
+Unlike the pilot study (Chapter 2), where data came from a single source and time period, the national case study requires **harmonizing multiple heterogeneous datasets** with different formats, temporal coverage, and spatial precision.
+
+## Why This Matters
+
+Poor data preparation causes:
+
+❌ **Geocoding errors** → Routes to wrong locations
+❌ **Temporal mismatches** → Transit schedules don't match analysis dates
+❌ **Boundary inconsistencies** → Origins/destinations outside network coverage
+❌ **Missing values** → Incomplete accessibility estimates
+
+Quality control at this stage prevents **garbage-in-garbage-out** problems downstream.
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+- Process semi-annual bank branch reports into geocoded point data
+- Validate and prepare national GTFS feeds for R5R
+- Generate origin points from census boundaries
+- Implement data quality checks and documentation
+- Structure datasets for efficient large-scale routing

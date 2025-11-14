@@ -1,0 +1,48 @@
+# Results and Visualization {#sec-results-visualization}
+
+## Introduction
+
+With routing complete (Chapter 9), we now have **enumeration-district-level accessibility estimates** for 50,000+ locations across three time periods. The final step is transforming raw travel times into **policy-relevant insights**.
+
+This chapter covers:
+
+**1. Spatial Aggregation**
+- Population-weighted aggregation to Eup/Myeon/Dong and Si/Gun/Gu
+- Preserving demographic representativeness
+- Handling boundary changes across time periods
+
+**2. Temporal Change Detection**
+- Calculating accessibility changes (2021 vs 2023)
+- Identifying areas with largest declines
+- Statistical significance testing
+
+**3. Visualization Strategies**
+- Choropleth maps of banking accessibility
+- Temporal comparison (small multiples, difference maps)
+- Demographic disparities (elderly vs general population)
+- Interactive web maps for exploration
+
+**4. Policy Interpretation**
+- Identifying "banking deserts" (low accessibility zones)
+- Quantifying vulnerable populations affected
+- Connecting findings to policy context (Chapter 7)
+- Limitations and caveats
+
+## From Numbers to Narrative
+
+Raw accessibility metrics are not self-explanatory. Effective communication requires:
+
+✓ **Context**: How do current levels compare to past trends or other regions?
+✓ **Equity lens**: Who is most affected by accessibility gaps?
+✓ **Actionability**: What can policymakers do with this information?
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+- Aggregate enumeration district results to administrative units
+- Calculate population-weighted accessibility indicators
+- Detect temporal changes and spatial inequalities
+- Create publication-quality maps and visualizations
+- Interpret accessibility results for policy audiences
+- Export results for further analysis or reporting

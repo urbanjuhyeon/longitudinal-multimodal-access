@@ -1,0 +1,219 @@
+# Multimodal transport data {#sec-multimodal-data}
+
+Multimodal accessibility analysis requires two foundational data types: public transit schedules and street network geometry. Fortunately, global standards and collaborative mapping efforts have made both increasingly available as open data.
+
+## GTFS: General Transit Feed Specification
+
+### What is GTFS?
+
+The General Transit Feed Specification (GTFS) is a standardized data format for public transportation schedules and geographic information. Originally developed by Google in 2005 for trip planning applications, GTFS has become the de facto international standard for representing transit systems.
+
+A GTFS dataset is a collection of text files (packaged as a `.zip` archive) containing:
+
+- **Routes**: Bus, metro, and train lines
+- **Stops**: Station and stop locations with coordinates
+- **Trips**: Specific vehicle journeys along routes
+- **Stop times**: When each trip arrives/departs each stop
+- **Calendar**: Service availability by date and day of week
+- **Shapes** (optional): Geographic paths that routes follow
+
+### Why GTFS matters for accessibility
+
+GTFS enables realistic transit routing because it captures temporal complexity:
+
+- **Schedule accuracy**: Actual departure/arrival times, not assumed frequencies
+- **Service variation**: Different schedules for weekday/weekend, peak/off-peak
+- **Temporal validity**: Calendar defines when schedules apply
+- **Multimodal integration**: Includes walk transfers between stops/lines
+
+This temporal dimension is critical for longitudinal analysis. Transit service changes—new routes, frequency adjustments, coverage expansion—are reflected in updated GTFS feeds, making it possible to track how public transport accessibility evolves.
+
+### Where to obtain GTFS
+
+GTFS availability has grown dramatically:
+
+**Global repositories**
+
+- [Mobility Database](https://database.mobilitydata.org/): 2,000+ feeds worldwide
+- [TransitFeeds](https://transitfeeds.com/): Historical and current feeds
+- Transit agency websites: Many agencies publish GTFS directly
+
+**South Korea**
+
+- [KTDB (Korea Transport Database)](https://www.ktdb.go.kr/): National GTFS feeds
+- Covers intercity, metropolitan, and local transit systems
+- Available for download with registration
+
+**Temporal coverage**
+
+For longitudinal analysis, you need GTFS snapshots from multiple time points. Some agencies maintain archives; others require manual collection over time. The Mobility Database and TransitFeeds preserve historical versions.
+
+::: {.callout-note}
+## Data acquisition in this book
+
+Detailed GTFS download and preprocessing workflows for South Korea are covered in:
+
+- **Section 3.2**: Pilot data preparation (Paldal-gu)
+- **Section 4.2**: National data preparation
+
+Here we focus on conceptual understanding rather than step-by-step data acquisition.
+:::
+
+## OpenStreetMap: Collaborative street networks
+
+### What is OpenStreetMap?
+
+OpenStreetMap (OSM) is a collaborative project creating a free, editable map of the world. Think of it as "Wikipedia for maps"—volunteers contribute geographic data including:
+
+- **Road networks**: Streets, highways, pedestrian paths, cycle lanes
+- **Road attributes**: Speed limits, surface types, lane counts
+- **Points of interest**: Buildings, amenities, landmarks
+- **Administrative boundaries**: City, district, neighborhood borders
+
+For accessibility analysis, we primarily use OSM's street network data.
+
+### Why OSM for accessibility?
+
+OSM offers unique advantages over proprietary map data:
+
+**Open and free**
+
+- No licensing costs or usage restrictions
+- Enables reproducible research
+
+**Global coverage**
+
+- Especially strong in areas without commercial mapping
+- Community maintains and updates continuously
+
+**Rich attributes**
+
+- Tags describe road types (motorway, residential, footway)
+- Attributes enable mode-specific routing (car vs walk vs bike)
+
+**Programmable access**
+
+- APIs and tools for bulk download
+- Standard formats (.pbf, .osm) work with routing engines
+
+### OSM data structure
+
+OSM represents geography through three primitives:
+
+- **Nodes**: Points with latitude/longitude
+- **Ways**: Ordered lists of nodes forming lines or polygons
+- **Relations**: Logical groupings of nodes/ways (e.g., bus routes)
+
+For routing, we need ways representing streets, tagged with attributes like:
+
+- `highway=motorway`, `highway=residential`, `highway=footway`
+- `maxspeed=50`
+- `lanes=2`
+- `surface=asphalt`
+
+### Obtaining OSM data
+
+**Global extracts**
+
+- [Geofabrik](https://download.geofabrik.de/): Daily-updated country/region extracts
+- [BBBike](https://extract.bbbike.org/): Custom area extracts
+
+**OSM APIs**
+
+- Overpass API: Custom queries for specific features
+- osmnx (Python), osmdata (R): Programmatic access
+
+**South Korea**
+
+Geofabrik provides South Korea extracts updated daily in `.pbf` (Protocolbuffer Binary Format), the compact format used by routing engines.
+
+::: {.callout-important}
+## Temporal consistency
+
+For longitudinal analysis, OSM presents a challenge: the database continuously updates. To ensure temporal validity:
+
+- Download OSM extracts from dates matching your GTFS feeds
+- Use services archiving historical OSM data (e.g., Geofabrik's historical extracts)
+- In practice, road network changes are slower than transit schedule changes, making minor temporal mismatches acceptable for most analyses
+:::
+
+## GTFS + OSM: Complementary data
+
+These two data sources form a complete multimodal transport network:
+
+| Data source | Represents | Enables routing for |
+|-------------|-----------|-------------------|
+| GTFS | Public transit routes, schedules, stops | Bus, metro, train travel |
+| OSM | Street networks, paths | Walking, cycling, driving |
+
+**Integration logic**
+
+Multimodal routing engines like R5 (discussed in Chapter 3) combine these datasets:
+
+1. **Transit network**: Constructed from GTFS stops, routes, and schedules
+2. **Street network**: Built from OSM ways tagged for different modes
+3. **Transfers**: Walking connections between transit stops use OSM pedestrian paths
+4. **Access/egress**: Trips start/end with walks along OSM streets to/from transit
+
+For example, a public transit trip from home to a bank might involve:
+
+- Walk from home to bus stop (OSM pedestrian network)
+- Bus journey (GTFS schedule)
+- Transfer walk between bus and metro (OSM + GTFS stop locations)
+- Metro journey (GTFS schedule)
+- Walk from metro station to bank (OSM pedestrian network)
+
+## Temporal dimensions in longitudinal analysis
+
+For longitudinal accessibility studies, we need matched GTFS and OSM snapshots at each time point:
+
+**This book's temporal structure**
+
+| Year | Time points | GTFS source | OSM source |
+|------|------------|-------------|------------|
+| 2021 | June, December | KTDB | Geofabrik (matching dates) |
+| 2022 | June, December | KTDB | Geofabrik (matching dates) |
+| 2023 | June, December | KTDB | Geofabrik (matching dates) |
+
+This creates six multimodal network snapshots, enabling analysis of how accessibility changed over three years.
+
+## Data quality considerations
+
+Both GTFS and OSM rely on data contributions—by transit agencies and volunteers, respectively. Quality varies:
+
+**GTFS quality signals**
+
+- Official agency feeds (higher trust)
+- Regular updates (active maintenance)
+- Complete shapes.txt (geographic accuracy)
+- Validation tools (e.g., Google's GTFS validator)
+
+**OSM quality signals**
+
+- Density of contributors in the region
+- Recency of edits
+- Completeness of road network
+- Attribute richness (speed limits, lanes, etc.)
+
+**South Korea data quality**
+
+Both GTFS (from KTDB) and OSM have excellent coverage and quality in South Korea:
+
+- KTDB provides official, validated GTFS feeds
+- OSM road network is comprehensive, especially in urban areas
+- Active OSM contributor community maintains currency
+
+## Beyond GTFS and OSM
+
+While this book focuses on these two data sources, other data enrich accessibility analysis:
+
+- **Population data**: Census boundaries and counts (where people live)
+- **POI data**: Service locations (banks, hospitals, schools)
+- **Topography**: Elevation affecting walking/cycling difficulty
+- **Real-time data**: Live transit positions, traffic speeds
+
+We incorporate population and POI data in later sections. The methods presented here generalize to any accessibility analysis with GTFS and street network inputs.
+
+## What's next
+
+Understanding GTFS and OSM as standardized, open data sources is essential context. But how do we actually use these data to calculate travel times and accessibility? Chapter 3 introduces r5r, the routing engine that transforms GTFS and OSM into actionable multimodal accessibility estimates.

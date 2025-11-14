@@ -1,0 +1,153 @@
+# Network Setup and Parameters {#sec-network-setup}
+
+::: {.callout-note appearance="simple"}
+## Part II: Methodology Development
+
+The next four chapters demonstrate the complete R5R accessibility workflow using **banking accessibility in Suwon's Paldal-gu district** as a working example. This provides a manageable case (80 census tracts, ~20 bank branches) to learn R5R functions, verify outputs, and develop reusable code patterns.
+:::
+
+## Introduction
+
+Before conducting accessibility analysis, we must build a multimodal transportation network and configure routing parameters. This chapter demonstrates network setup using R5R, which combines OpenStreetMap road networks and GTFS transit data into a unified routing engine.
+
+## Building the R5R Network
+
+R5R constructs a multimodal network from the preprocessed data files we created in Chapter 2.
+
+```{r}
+#| label: setup-r5r
+#| eval: false
+
+library(r5r)
+
+# Set paths
+pilot_data_dir <- "outputs/pilot/data"
+
+# Build network
+r5r_core <- setup_r5(
+  data_path = pilot_data_dir,
+  verbose = TRUE,
+  overwrite = TRUE
+)
+```
+
+The `setup_r5()` function:
+
+- Loads OSM `.pbf` file for street network
+- Loads GTFS `.zip` file for transit schedules
+- Builds transfer connections between modes
+- Creates a routable graph structure
+- Saves `network.dat` file for reuse
+
+::: {.callout-note}
+## Build Time
+Network building takes 1-5 minutes depending on data size. The `network.dat` file can be reused for subsequent analyses with the same data.
+:::
+
+## Parameter Configuration
+
+Routing behavior is controlled by several key parameters that significantly affect results.
+
+### Temporal Parameters
+
+```{r}
+#| label: temporal-params
+#| eval: false
+
+ANALYSIS_DATE <- "2021-06-15"
+DEPARTURE_TIME <- "09:00:00"
+
+DEPARTURE_TIME_obj <- as.POSIXct(
+  paste(ANALYSIS_DATE, DEPARTURE_TIME)
+)
+```
+
+**Considerations:**
+
+- Date must fall within GTFS `calendar.txt` validity period
+- Departure time affects transit availability (peak vs off-peak)
+- Multiple time windows may be needed for robust analysis
+
+### Routing Parameters
+
+```{r}
+#| label: routing-params
+#| eval: false
+
+MAX_WALK_TIME <- 30        # minutes
+MAX_TRIP_DURATION <- 120   # minutes
+```
+
+**Parameter meanings:**
+
+- `max_walk_time`: Maximum walking distance to/from transit or for entire walk-only trips
+- `max_trip_duration`: Total journey time limit (all modes combined)
+
+::: {.callout-warning}
+## Walk-Only Mode Exception
+For walk-only routing, use extended `max_walk_time` (e.g., 120 minutes) and set `shortest_path = FALSE` to avoid routing errors.
+:::
+
+### Mode-Specific Settings
+
+```{r}
+#| label: mode-config
+#| eval: false
+
+# Mode configurations
+mode_config <- list(
+  "PT" = c("WALK", "TRANSIT"),  # Public Transit
+  "CAR" = c("CAR"),
+  "WALK" = c("WALK")
+)
+
+# Shortest path settings
+# CAR, PT: shortest_path = TRUE
+# WALK: shortest_path = FALSE
+```
+
+The `shortest_path` parameter controls route optimization:
+
+- `TRUE`: Minimize cumulative distance (may yield circuitous routes)
+- `FALSE`: Consider multiple route alternatives
+
+### Accessibility Thresholds
+
+For many-to-many analyses, we define time thresholds to count accessible opportunities:
+
+```{r}
+#| label: thresholds
+#| eval: false
+
+TIME_THRESHOLD_CAR <- 10   # minutes
+TIME_THRESHOLD_PT <- 20    # minutes
+```
+
+**Rationale:**
+
+- Car: 10 minutes covers ~5-8 km in urban areas
+- Public Transit: 20 minutes accounts for waiting and transfers
+- Thresholds should match study area buffer and research questions
+
+## Pilot Study Area
+
+Our pilot test uses Paldal-gu (Suwon) with 1,500m buffer:
+
+- **Study region:** Paldal-gu (수원시 팔달구)
+- **Year:** 2021
+- **Buffer:** 1,500 meters
+- **Census tracts:** ~80 output areas
+
+![Pilot study area showing GTFS stops and routes within the buffered boundary](assets/figures/pilot/gtfs_visualization_paldal_2021.png){#fig-pilot-gtfs}
+
+![Pilot study area showing OSM road network within the buffered boundary](assets/figures/pilot/osm_visualization_paldal_2021.png){#fig-pilot-osm}
+
+## Summary
+
+This chapter established:
+
+- ✓ R5R network building procedure
+- ✓ Key parameter definitions and their impacts
+- ✓ Pilot study area characteristics
+
+With the network built and parameters configured, we proceed to test three Origin-Destination patterns in the following chapters.

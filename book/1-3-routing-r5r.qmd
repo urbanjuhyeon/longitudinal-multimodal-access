@@ -1,0 +1,336 @@
+# Routing with r5r {#sec-routing-r5r}
+
+GTFS and OSM data provide the raw ingredients for accessibility analysis, but we need a routing engine to transform static data into dynamic travel time estimates. This chapter introduces r5r, the tool that powers the multimodal accessibility calculations throughout this book.
+
+## Why routing engines matter
+
+Simple distance-based accessibility—measuring how many services fall within a radius—ignores transportation realities:
+
+- A bank 2 km away by road might require a 15-minute drive or a 45-minute bus journey
+- Two destinations equidistant from an origin can have vastly different accessibility by transit
+- Network connectivity, traffic speeds, transit schedules, and transfer requirements shape true accessibility
+
+**Routing engines** compute realistic travel times by simulating journeys through transportation networks, accounting for:
+
+- Road network topology and speeds
+- Transit schedules and frequencies
+- Waiting times and transfers
+- Mode-specific constraints (walk speed, vehicle access)
+
+This transforms accessibility from a geometric problem (proximity) into a network problem (reachability).
+
+## R5: Rapid Realistic Routing
+
+[R5 (Rapid Realistic Routing on Real-world and Reimagined networks)](https://github.com/conveyal/r5) is a high-performance multimodal routing engine developed by Conveyal. Written in Java, R5 specializes in:
+
+**Multimodal routing**
+
+- Combines GTFS (transit) and OSM (streets) into a unified network
+- Handles walk-transit-walk trip chains
+- Supports car, transit, bicycle, and walking
+
+**Speed**
+
+- Optimized algorithms for large-scale analysis
+- Parallel computation of many-to-many travel times
+- Designed for city-scale and regional accessibility studies
+
+**Temporal accuracy**
+
+- Respects transit schedules from GTFS
+- Accounts for waiting times and departure time windows
+- Handles frequency-based vs schedule-based services
+
+**Open source**
+
+- Free to use and modify
+- Active development community
+- Well-documented and validated
+
+R5 has become a standard tool in transport research and practice, powering accessibility analyses for transportation agencies, researchers, and advocacy organizations worldwide.
+
+## r5r: R5 in R
+
+While R5 is powerful, it's a Java application requiring technical setup and command-line interaction. The [r5r package](https://ipeagit.github.io/r5r/) (Pereira et al., 2021) makes R5 accessible to R users through a simple, intuitive interface.
+
+**Why r5r?**
+
+**Ease of use**
+
+- Install like any R package: `install.packages("r5r")`
+- No Java configuration required (r5r handles it automatically)
+- Familiar R syntax and data structures
+
+**Integration with R ecosystem**
+
+- Works seamlessly with `sf` for spatial data
+- Outputs data.frames compatible with `tidyverse` workflows
+- Integrates with `ggplot2` for visualization
+
+**Reproducible workflows**
+
+- All code in R scripts or Quarto documents
+- Facilitates version control and collaboration
+- Lowers barriers for replication studies
+
+**Active development**
+
+- Maintained by researchers at Ipea (Brazil) and collaborators
+- Regular updates incorporating R5 improvements
+- Strong documentation and community support
+
+r5r has been widely adopted in transport geography and urban planning research, enabling reproducible multimodal accessibility studies across diverse contexts (see Pereira & Herszenhut, 2023 for an extensive guide).
+
+## How r5r works: A conceptual overview
+
+r5r operates through a simple workflow:
+
+### 1. Build a multimodal network
+
+```r
+library(r5r)
+
+r5r_core <- setup_r5(
+  data_path = "path/to/data",  # Folder with GTFS .zip and OSM .pbf
+  verbose = FALSE
+)
+```
+
+This single function:
+
+- Loads GTFS files (transit routes, stops, schedules)
+- Loads OSM `.pbf` file (street network)
+- Constructs a routable multimodal graph
+- Saves a `network.dat` file for reuse
+
+The `r5r_core` object is a connection to the R5 Java backend, ready for routing queries.
+
+### 2. Define origins and destinations
+
+Origins and destinations are point locations with coordinates:
+
+```r
+origins <- data.frame(
+  id = c("home_1", "home_2"),
+  lon = c(126.9780, 126.9850),
+  lat = c(37.5665, 37.5700)
+)
+
+destinations <- data.frame(
+  id = c("bank_1", "bank_2"),
+  lon = c(127.0000, 127.0100),
+  lat = c(37.5750, 37.5800)
+)
+```
+
+### 3. Calculate travel times
+
+```r
+travel_times <- travel_time_matrix(
+  r5r_core = r5r_core,
+  origins = origins,
+  destinations = destinations,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = as.POSIXct("2021-06-15 09:00:00"),
+  max_trip_duration = 120
+)
+```
+
+r5r computes travel times for all origin-destination pairs, respecting:
+
+- Transit schedules on the specified date/time
+- Maximum trip duration constraint
+- Specified mode(s)
+
+The output is a tidy data.frame:
+
+| from_id | to_id | travel_time_p50 |
+|---------|-------|----------------|
+| home_1  | bank_1 | 28 |
+| home_1  | bank_2 | 35 |
+| home_2  | bank_1 | 22 |
+| home_2  | bank_2 | 30 |
+
+### 4. Calculate accessibility
+
+For cumulative opportunity accessibility (how many destinations are reachable within a time threshold):
+
+```r
+accessibility <- accessibility(
+  r5r_core = r5r_core,
+  origins = origins,
+  destinations = destinations,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = as.POSIXct("2021-06-15 09:00:00"),
+  cutoffs = c(30, 60)  # minutes
+)
+```
+
+Output counts how many destinations each origin can reach:
+
+| id | accessibility_30min | accessibility_60min |
+|----|--------------------|--------------------|
+| home_1 | 1 | 2 |
+| home_2 | 2 | 2 |
+
+## Routing patterns for different questions
+
+r5r supports several routing patterns suited to different research questions:
+
+**One-to-one routing**
+
+- Calculate travel time between a single origin and single destination
+- Use case: Detailed route inspection, validation
+- Function: `detailed_itineraries()`
+
+**One-to-many routing**
+
+- Calculate travel times from one origin to many destinations
+- Use case: Individual accessibility profiles, service areas
+- Function: `travel_time_matrix()` with one origin
+
+**Many-to-many routing**
+
+- Calculate travel times for all origin-destination pairs
+- Use case: City-wide accessibility, equity analysis
+- Function: `travel_time_matrix()` or `accessibility()` with many origins
+
+This book demonstrates all three patterns:
+
+- **Section 2.2**: One-to-one routing (understanding travel paths)
+- **Section 2.3**: One-to-many routing (origin-centric accessibility)
+- **Section 2.4**: Many-to-many routing (population-wide analysis)
+
+## Multimodal comparisons
+
+A key strength of r5r is comparing accessibility across transportation modes. By running the same analysis with different `mode` parameters, we reveal modal disparities:
+
+**Public transit**
+```r
+mode = c("WALK", "TRANSIT")
+```
+
+**Private car**
+```r
+mode = c("CAR")
+```
+
+**Walk only**
+```r
+mode = c("WALK")
+```
+
+These comparisons expose equity issues: communities with excellent car accessibility but poor transit access face mobility disadvantages if they lack vehicle ownership.
+
+## Longitudinal analysis workflow
+
+For tracking accessibility over time, we repeat the routing process for each temporal snapshot:
+
+1. **Prepare data**: GTFS and OSM for each time point (e.g., 2021-06, 2021-12, 2022-06, ...)
+2. **Build networks**: `setup_r5()` for each time point's data folder
+3. **Calculate accessibility**: Run routing with consistent origins, destinations, and parameters
+4. **Compare results**: Analyze how accessibility changed between time points
+
+Computational efficiency is critical at scale. This book develops strategies for:
+
+- Spatial partitioning (divide-and-conquer large regions)
+- Parallel processing (utilize multiple CPU cores)
+- Result caching (avoid redundant calculations)
+
+These techniques are introduced in Section 2 (methodology) and applied in Sections 3-4 (pilot and national scales).
+
+## Beyond travel time: Other r5r capabilities
+
+While this book focuses on travel time and accessibility calculations, r5r offers additional functionality:
+
+- **Detailed itineraries**: Step-by-step route instructions
+- **Isochrones**: Polygons showing areas reachable within time thresholds
+- **Expanded travel times**: Monte Carlo sampling of multiple departure times
+- **Custom walk/bike speeds**: Adjust for different population groups
+
+See the [r5r documentation](https://ipeagit.github.io/r5r/) and Pereira & Herszenhut (2023) for comprehensive coverage.
+
+## Reproducibility and openness
+
+Using r5r aligns with open science principles:
+
+**Open-source tool**
+
+- Free to use, no licensing costs
+- Transparent algorithms (inspect source code)
+- Community-driven development
+
+**Open data**
+
+- Works with GTFS and OSM (freely available)
+- No proprietary data dependencies
+
+**Reproducible workflows**
+
+- All code in R scripts
+- Results verifiable by others
+- Facilitates peer review and replication
+
+This book provides complete code for every analysis, enabling readers to reproduce results and adapt workflows to their own contexts.
+
+## Why R?
+
+Beyond r5r, R offers rich ecosystem support for spatial accessibility research:
+
+- **Data manipulation**: `dplyr`, `tidyr`, `data.table`
+- **Spatial data**: `sf`, `terra`, `mapview`
+- **Visualization**: `ggplot2`, `tmap`, `leaflet`
+- **Parallel computing**: `future`, `furrr`, `parallel`
+- **Reporting**: Quarto, R Markdown
+
+This integration means analyses can flow from data acquisition through routing to visualization and reporting—all in one environment.
+
+## What's next: The structure of this book
+
+The remaining sections build incrementally toward national-scale longitudinal accessibility analysis:
+
+**SECTION 2: Methodology Development**
+
+Chapters 4-7 develop the analytical workflow using a pilot study area (Paldal-gu, Suwon):
+
+- **Chapter 4**: Network setup and parameter configuration
+- **Chapter 5**: One-to-one routing (route inspection and validation)
+- **Chapter 6**: One-to-many routing (origin-specific accessibility)
+- **Chapter 7**: Many-to-many routing (population-wide analysis)
+
+This section establishes reusable code patterns and computational strategies with manageable data before scaling up.
+
+**SECTION 3: Pilot Application**
+
+Chapters 8-11 apply the methodology to the pilot area:
+
+- **Chapter 8**: Case study context (Paldal-gu banking landscape)
+- **Chapter 9**: Data preparation (GTFS, OSM, POIs for pilot)
+- **Chapter 10**: Routing workflow execution
+- **Chapter 11**: Results visualization and interpretation
+
+This validates the approach at a scale where outputs can be manually inspected and verified.
+
+**SECTION 4: National-Scale Application**
+
+Chapters 12-15 extend to the entire country:
+
+- **Chapter 12**: National case study framing
+- **Chapter 13**: National data preparation (50,000+ census tracts, 6 time points)
+- **Chapter 14**: Computational strategies (spatial partitioning, parallel processing)
+- **Chapter 15**: National results and policy implications
+
+This demonstrates how the workflow scales to research-grade analyses requiring substantial computational resources.
+
+**SECTION 5: Discussion and Conclusion**
+
+Chapters 16-17 reflect on the approach:
+
+- **Chapter 16**: Methodological contributions, limitations, and extensions
+- **Chapter 17**: Implications for research and practice
+
+## Getting started
+
+With conceptual foundations established—understanding accessibility (Chapter 1), data sources (Chapter 2), and routing tools (Chapter 3)—we're ready to build the analytical workflow.
+
+Section 2 begins with network setup: preparing r5r for multimodal routing with GTFS and OSM data.

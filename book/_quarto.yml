@@ -1,0 +1,46 @@
+project:
+  type: book
+  resources:
+    - assets/figures/**/*.png
+
+book:
+  title: "Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R"
+  author: "Juhyeon Park"
+  date: "2025. 10. 30."
+  chapters:
+    - index.qmd
+    - part: "Introduction"
+      chapters:
+        - 1-1-urban-accessibility.qmd
+        - 1-2-multimodal-data.qmd
+        - 1-3-routing-r5r.qmd
+    - part: "Methodology Development"
+      chapters:
+        - 2-1-network-setup.qmd
+        - 2-2-one-to-one.qmd
+        - 2-3-one-to-many.qmd
+        - 2-4-many-to-many.qmd
+    - part: "Application"
+      chapters:
+        - 3-1-case-study.qmd
+        - 3-2-data-preparation.qmd
+        - 3-3-routing-workflow.qmd
+        - 3-4-results-visualization.qmd
+    - part: "Discussion"
+      chapters:
+        - 4-1-discussion.qmd
+        - 4-2-conclusion.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: custom.css
+    number-depth: 3
+  pdf:
+    documentclass: scrreprt
+    number-depth: 3
+
+
+

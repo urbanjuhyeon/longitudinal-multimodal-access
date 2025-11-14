@@ -1,0 +1,197 @@
+# One-to-Many: Transit Access {#sec-one-to-many}
+
+## Introduction
+
+One-to-many routing calculates travel times from multiple origins to a single destination. This pattern is common in accessibility analysis for:
+
+- Access to major facilities (hospitals, government offices)
+- Transit equity studies
+- Service area delineation
+- Identifying underserved populations
+
+## Test Case: Access to City Hall
+
+We analyze travel times from all census tract centroids in Paldal-gu to Suwon City Hall.
+
+### Preparing Origins
+
+Calculate centroids of census tracts:
+
+```{r}
+#| label: census-centroids
+#| eval: false
+
+# Load census tract boundaries
+census_tract_sf <- st_read("data/census/oa_bnd.gpkg", quiet = TRUE)
+
+# Filter Paldal-gu
+paldal_tracts <- census_tract_sf %>%
+  filter(SIGUNGU_NM == "수원시 팔달구")
+
+# Calculate centroids
+paldal_centroids <- paldal_tracts %>%
+  st_transform(5179) %>%  # Project to metric CRS
+  st_centroid() %>%
+  st_transform(4326)      # Back to WGS84
+
+# Extract coordinates
+paldal_origins <- paldal_centroids %>%
+  mutate(
+    lon = st_coordinates(.)[, 1],
+    lat = st_coordinates(.)[, 2]
+  ) %>%
+  st_drop_geometry() %>%
+  select(id = TOT_REG_CD, lon, lat)
+```
+
+::: {.callout-note}
+## Why Centroids?
+Census tract centroids represent the average location of residents. While not perfect (population may be unevenly distributed), centroids are commonly used for regional accessibility analysis.
+:::
+
+### Defining Destination
+
+```{r}
+#| label: destination
+#| eval: false
+
+suwon_cityhall <- data.frame(
+  id = "SuwonCityHall",
+  lon = 127.02866,
+  lat = 37.26351
+)
+```
+
+## Calculating Travel Time Matrix
+
+The `travel_time_matrix()` function computes travel times from all origins to the destination:
+
+```{r}
+#| label: ttm-calculation
+#| eval: false
+
+# Car mode
+car_ttm <- travel_time_matrix(
+  r5r_core = r5r_core,
+  origins = paldal_origins,
+  destinations = suwon_cityhall,
+  mode = c("CAR"),
+  departure_datetime = DEPARTURE_TIME_obj,
+  max_walk_time = MAX_WALK_TIME,
+  max_trip_duration = MAX_TRIP_DURATION,
+  verbose = FALSE
+)
+
+# Public Transit mode
+pt_ttm <- travel_time_matrix(
+  r5r_core = r5r_core,
+  origins = paldal_origins,
+  destinations = suwon_cityhall,
+  mode = c("WALK", "TRANSIT"),
+  departure_datetime = DEPARTURE_TIME_obj,
+  max_walk_time = MAX_WALK_TIME,
+  max_trip_duration = MAX_TRIP_DURATION,
+  verbose = FALSE
+)
+```
+
+**Output structure:**
+
+| from_id | to_id | travel_time_p50 |
+|---------|-------|-----------------|
+| 4111311100101 | SuwonCityHall | 12.5 |
+| 4111311100102 | SuwonCityHall | 15.2 |
+
+The `travel_time_p50` column shows median travel time in minutes.
+
+## Spatial Visualization
+
+Join travel times with census tract geometries:
+
+```{r}
+#| label: spatial-join
+#| eval: false
+
+# Combine results
+all_accessibility <- bind_rows(
+  car_ttm %>% mutate(mode = "Car"),
+  pt_ttm %>% mutate(mode = "Public Transit")
+)
+
+# Join with spatial data
+paldal_accessibility <- paldal_tracts %>%
+  select(TOT_REG_CD, geom) %>%
+  inner_join(
+    all_accessibility,
+    by = c("TOT_REG_CD" = "from_id")
+  )
+```
+
+### Results
+
+![Travel time to Suwon City Hall from Paldal-gu census tracts by mode](assets/figures/pilot/accessibility_census_tracts_paldal_2021.png){#fig-census-access}
+
+**Key Patterns:**
+
+- **Car accessibility**: 5-15 minutes across most tracts
+  - Shortest: ~5 minutes (near City Hall)
+  - Longest: ~15 minutes (northern edge)
+  - Mean: ~8 minutes
+
+- **Public Transit accessibility**: 10-30 minutes
+  - Shortest: ~10 minutes (near transit corridors)
+  - Longest: ~30 minutes (transit service gaps)
+  - Mean: ~20 minutes
+
+- **Spatial inequality**: 2-3× difference between best and worst served areas
+
+::: {.callout-important}
+## Transit Equity Implications
+Areas with poor public transit accessibility may face mobility challenges, particularly for car-free households. Northern tracts show notably longer transit times.
+:::
+
+## Summary Statistics
+
+```{r}
+#| label: summary-stats
+#| eval: false
+
+paldal_accessibility %>%
+  st_drop_geometry() %>%
+  group_by(mode) %>%
+  summarise(
+    n = n(),
+    min = min(travel_time_p50),
+    mean = mean(travel_time_p50),
+    max = max(travel_time_p50),
+    sd = sd(travel_time_p50)
+  )
+```
+
+| Mode | N | Min | Mean | Max | SD |
+|------|---|-----|------|-----|----|
+| Car | 82 | 5.2 | 8.4 | 14.8 | 2.3 |
+| Public Transit | 78 | 10.5 | 19.7 | 29.4 | 5.1 |
+
+## Key Observations
+
+From one-to-many testing:
+
+✓ **R5R successfully calculates N×1 travel time matrices**
+
+✓ **Spatial patterns are coherent**:
+  - Travel times increase with distance
+  - Transit times show corridor effects
+  - Car accessibility more uniform
+
+✓ **Mode differences are substantial**:
+  - Public transit takes 2-3× longer on average
+  - Variability is higher for transit (SD = 5.1 vs 2.3)
+
+✓ **Missing values indicate routing failures**:
+  - Some census tracts unreachable by public transit within time limit
+  - All tracts reachable by car
+
+✓ **Computation time is reasonable**: ~30 seconds for 80+ origins
+
+These results demonstrate that R5R can efficiently handle one-to-many routing at neighborhood scale. Next, we test many-to-many patterns with multiple destinations.

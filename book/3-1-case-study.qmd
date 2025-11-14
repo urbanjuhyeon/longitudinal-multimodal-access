@@ -1,0 +1,322 @@
+# Case Study: Bank Accessibility Analysis {#sec-case-study}
+
+::: {.callout-note appearance="simple"}
+## Part III: Application
+
+The next four chapters apply the R5R workflow to a more complex case: **banking accessibility across South Korea over multiple time periods**. This introduces challenges in data integration (multiple heterogeneous datasets), computational efficiency (250M OD pairs), and policy-relevant analysis.
+:::
+
+## Introduction
+
+This chapter presents the research context and study design for analyzing **how bank accessibility has changed across South Korea due to branch closures**.
+
+We examine **national-scale accessibility changes from 2021-2023**, focusing on:
+
+-   Spatial inequality in banking access across 50,000+ census districts
+-   Differences between car and transit accessibility
+-   Differential impacts on elderly vs. general populations
+-   Geographic patterns of financial service deserts
+
+This demonstrates **scaling the R5R workflow from a single city (Part II) to nationwide analysis** while maintaining computational feasibility and methodological rigor.
+
+## Research Context
+
+### The Problem: Accelerating Branch Closures
+
+Korean bank branches declined **24% over a decade** (7,673 in 2012 → 5,800 in 2022), driven by digital banking adoption and cost pressures[^fsc2023][^fsc2025]. Meanwhile, internet banking surged from 53% to 78% of transactions, while in-person services dropped from 9% to 6%.
+
+### Why This Matters: Spatial and Social Inequity
+
+Three critical concerns emerge[^lee2025]:
+
+1.  **Age disparity**: Elderly (70+) use bank branches 2× more than average (54% vs 25%)[^fsc2023]
+2.  **Geographic inequality**: Longest travel distances (>20km) concentrated in aged rural areas (26 of top 30 regions are super-aged)[^lee2025]
+3.  **Service gaps**: Non-bank institutions (savings banks, cooperatives) show similar spatial bias—closures cannot be compensated[^lee2025]
+
+### Research Questions
+
+Given this context, we ask:
+
+-   **Where** have accessibility declines been most severe?
+-   **Who** is most affected (elderly, rural, transit-dependent populations)?
+-   **How much** has multimodal accessibility changed over time?
+-   **What** spatial patterns distinguish banking deserts from well-served areas?
+
+::: {.callout-note collapse="true" icon="false"}
+## 📚 Detailed Policy Background (Click to Expand)
+
+### Regulatory Responses
+
+**2023 Bank Branch Closure Enhancement Plan**[^fsc2023]:
+
+-   Strengthened pre-closure impact assessments with external experts
+-   Mandatory consultation with local communities before closure
+-   Required alternative arrangements (partner branches, ATMs, mobile banking education)
+-   Post-closure follow-up evaluation
+
+**2025 Banking Agency System**[^fsc2025]:
+
+-   Allows non-bank entities (post offices, mutual cooperatives) to provide bank services
+-   Aims to expand face-to-face service channels
+-   Limitations: Cannot fully replicate branch service quality and range
+
+### Academic Evidence
+
+Lee (2025) provides the first systematic spatial analysis of Korean bank branch distribution[^lee2025]:
+
+-   **Methodology**: Analyzed travel distances to nearest bank using Voronoi tessellation
+-   **Key finding**: Super-aged regions (65+ >20%) systematically have longer access distances
+-   **Insight**: Non-bank financial institutions exhibit similar spatial inequalities
+-   **Policy implication**: Holistic evaluation needed—delegated services alone insufficient
+
+### International Context
+
+Bank branch closures are a global phenomenon affecting developed economies:
+
+-   **United States**: "Banking deserts" identified in rural and low-income urban areas
+-   **Canada**: Distance-based closure regulations (10km threshold for rural areas)
+-   **Australia**: Tiered notification requirements (12 weeks for \>20km access)
+-   **United Kingdom**: Banking hubs and post office partnerships to maintain access
+
+Korea's challenge is compounded by **rapid aging** (super-aged society by 2025) and **extreme geographic concentration** (50% of population in Seoul Capital Area).
+:::
+
+::: {.callout-tip}
+## 💡 Why This Analysis Uses R5R
+
+Traditional GIS-based accessibility studies face limitations:
+
+- **Static networks**: Cannot model time-varying transit schedules
+- **Mode siloes**: Car and transit analyzed separately
+- **Computational cost**: National-scale many-to-many routing infeasible
+
+**R5R solves these**:
+
+- ✓ **Multimodal routing** with realistic transit schedules (GTFS)
+- ✓ **Raptor algorithm** enables massive-scale many-to-many OD matrices
+- ✓ **Parallel processing** via spatial partitioning (province-level chunks)
+
+See Chapters 3-6 for workflow validation.
+:::
+
+## Study Design Overview
+
+### Geographic Scope
+
+**Coverage**: All of South Korea (nationwide analysis)
+
+**Why national scale?**
+
+- Banking regulations are uniform across regions
+- Branch closures follow nationwide strategic decisions
+- Urban-rural disparities require comprehensive coverage
+
+**Spatial resolution**:
+
+- **Origins**: ~50,000 census enumeration districts (집계구)
+- **Analysis levels**: District → Eup/Myeon/Dong → Si/Gun/Gu → Province
+- **Coverage**: 17 provinces/metropolitan cities, ~250 Si/Gun/Gu
+
+### Temporal Scope
+
+- **Period**: 2021-2023 (6 semi-annual snapshots)
+- **Frequency**: June and December of each year
+- **Alignment**: Matches GTFS transit data releases
+
+### Comparison with Pilot Study
+
+| Aspect | Pilot (Part II) | Application (Part III) |
+|--------|-----------------|----------------------|
+| **Geography** | Paldal-gu (1 district) | All of South Korea |
+| **Origins** | ~80 census tracts | ~50,000 enum. districts |
+| **Destinations** | ~20 bank branches | ~5,000 branches |
+| **Time periods** | 1 snapshot | 6 snapshots (2021-2023) |
+| **OD pairs** | ~1,600 | ~250 million |
+| **Processing** | Minutes | Hours/Days |
+
+## Data Sources Overview
+
+This analysis integrates four primary datasets:
+
+| Dataset | Source | Temporal Coverage | Use in Analysis |
+|---------|--------|------------------|-----------------|
+| **Bank branches** | Korea Federation of Banks | 2021-2023 (semi-annual) | Destinations for accessibility |
+| **Transit networks** | KTDB GTFS | 2022-2023 (annual) | Transit routing via R5R |
+| **Road networks** | OpenStreetMap | 2021-2023 (annual) | Car routing via R5R |
+| **Census data** | SGIS | 2021-2023 (annual) | Origin points + demographics |
+
+### Key Data Challenges
+
+**1. Geocoding**
+- Bank addresses reported in varying formats across time
+- Requires standardization and quality control
+
+**2. Temporal Alignment**
+- Bank data: semi-annual (June/Dec)
+- Transit GTFS: annual (March)
+- OSM road networks: annual snapshots
+- Solution: Match to nearest available dates
+
+**3. Spatial Coverage**
+- Ensure all origins/destinations fall within network bounds
+- Handle islands and remote areas with limited transit
+
+**4. Data Volume**
+- 5,000+ bank branches × 13 time periods = 65,000 records
+- 50,000+ enumeration districts
+- Multiple GTFS feeds spanning all provinces
+
+::: {.callout-note}
+## 📦 Detailed Data Processing
+
+Data acquisition, geocoding, validation, and formatting workflows are covered in **Chapter 8: Preparing Analysis Datasets**.
+
+Full preprocessing code available at: [GitHub repository](https://github.com/urbanlab-seoul/bank-closure-analysis)
+:::
+
+## Analytical Framework
+
+### Core Metrics
+
+We calculate **travel time from each enumeration district to the nearest bank branch** using multimodal routing:
+
+**Transport modes analyzed**:
+
+- **Public transit + walking**: Realistic accessibility for transit-dependent populations
+- **Private car**: Benchmark for car-owning households
+
+**Key indicators**:
+
+1. **Minimum travel time**: Time to nearest bank branch
+2. **Number of banks within X minutes**: Service redundancy measure
+3. **Temporal change**: Δ accessibility from 2021 to 2023
+
+### Methodological Approach
+
+The validated R5R workflow from Part II is adapted for national scale with three key strategies:
+
+**1. Spatial Partitioning** (Chapter 9)
+
+- Divide national analysis into province-level chunks
+- Process each province independently to manage memory
+- Combine results after completion
+
+**2. Parallel Processing** (Chapter 9)
+
+- Use `{future}` and `{furrr}` for multi-core execution
+- Configure workers based on available computational resources
+- Monitor progress and handle errors gracefully
+
+**3. Hierarchical Aggregation** (Chapter 10)
+
+- Calculate district-level accessibility (finest resolution)
+- Aggregate to Eup/Myeon/Dong using population weights
+- Further aggregate to Si/Gun/Gu and Province levels
+- Preserve both fine-grained detail and policy-relevant summaries
+
+### Analysis Workflow
+
+```mermaid
+graph TD
+    A[Bank locations<br/>GTFS transit<br/>OSM roads<br/>Census data] --> B[Data Preparation<br/>Chapter 8]
+    B --> C[Province-level<br/>spatial partitions]
+    C --> D[Parallel routing<br/>R5R many-to-many<br/>Chapter 9]
+    D --> E[District-level<br/>accessibility]
+    E --> F[Population-weighted<br/>aggregation<br/>Chapter 10]
+    F --> G[Maps & insights<br/>Chapter 10]
+```
+
+### Travel Time Thresholds
+
+We define "accessible" based on realistic trip expectations:
+
+- **Public transit + walking**: 30 minutes (urban standard)
+- **Private car**: 15 minutes (comparable to transit in well-served areas)
+
+Rationale: Bank visits are purposeful trips that justify longer travel times compared to daily services (groceries, schools).
+
+## Preview of Results
+
+Detailed results, visualizations, and policy implications are presented in **Chapter 10: Results and Visualization**.
+
+Key analyses will include:
+
+**Spatial patterns**:
+
+- Which regions have highest/lowest banking accessibility?
+- Identification of "banking deserts" (low accessibility zones)
+- Urban-rural accessibility gaps
+
+**Temporal changes**:
+
+- How has accessibility changed from 2021 to 2023?
+- Which areas experienced greatest declines?
+- Were branch closures concentrated in specific regions?
+
+**Demographic equity**:
+
+- Accessibility for elderly populations vs general population
+- Transit-dependent vs car-owning households
+- Vulnerable populations affected by closures
+
+**Policy relevance**:
+
+- Evidence for branch closure approval processes
+- Spatial targeting for alternative service provision
+- Transit investment priorities
+
+## Reproducibility
+
+All analysis code and data are openly available:
+
+- **GitHub repository**: [github.com/urbanlab-seoul/bank-closure-analysis](https://github.com/urbanlab-seoul/bank-closure-analysis)
+- **Data sources**: Listed in Chapter 8
+- **Quarto book**: This book itself is the reproducible documentation
+
+## Summary
+
+This chapter introduced a **real-world application** of the R5R accessibility workflow: analyzing how bank branch closures affect financial service access across South Korea.
+
+### What We Covered
+
+**Research context**:
+
+- Bank branches declined 24% over a decade (2012-2022)
+- Elderly populations disproportionately rely on in-person banking
+- Geographic inequalities concentrated in aged rural areas
+
+**Study design**:
+
+- **Scale**: Entire South Korea (50,000+ enumeration districts)
+- **Time**: 2021-2023 (6 semi-annual snapshots)
+- **Data**: Bank locations, GTFS transit, OSM roads, census demographics
+
+**Analytical framework**:
+
+- Multimodal routing (transit + car) via R5R
+- Spatial partitioning and parallel processing for computational efficiency
+- Hierarchical aggregation to multiple administrative levels
+
+### Next Steps
+
+The following chapters implement this analysis:
+
+- **Chapter 8**: Data preparation and quality control
+- **Chapter 9**: Large-scale routing workflow
+- **Chapter 10**: Results, visualization, and policy implications
+
+### Key Takeaway
+
+The validated pilot workflow (Part II) successfully scales to **national analysis** by combining:
+
+- ✓ Spatial partitioning (manage memory)
+- ✓ Parallel processing (reduce computation time)
+- ✓ Incremental saving (enable error recovery)
+
+This demonstrates that **R5R-based accessibility analysis** can scale from neighborhood studies to national policy questions while remaining computationally feasible and methodologically rigorous.
+
+[^fsc2023]: 금융위원회·금융감독원·은행연합회 (2023). 은행 점포폐쇄 내실화 방안. 제5차 은행권 경영·영업 관행·제도 개선 TF 실무작업반.
+
+[^fsc2025]: 금융위원회 (2025). 소비자의 금융접근성을 제고해 나가겠습니다: 은행대리업 도입 등 은행업무 위탁 활성화 방안. 보도자료.
+
+[^lee2025]: 이시연 (2025). 국내 금융기관 오프라인 점포 감소 문제와 시사점. KIF 금융브리프, 34(7), 3-8. 한국금융연구원.

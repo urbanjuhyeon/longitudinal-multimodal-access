@@ -1,0 +1,46 @@
+# Routing Workflow at Scale {#sec-routing-workflow}
+
+## Introduction
+
+With analysis-ready datasets prepared (Chapter 8), we now face the computational challenge: **routing 250+ million origin-destination pairs** across three time periods.
+
+The core R5R workflow from Part II remains the same:
+```r
+travel_time_matrix(r5r_core, origins, destinations, mode, departure_datetime, ...)
+```
+
+But at national scale, we must address:
+
+- **Memory constraints**: Cannot load 250M OD pairs into RAM simultaneously
+- **Computational cost**: Single-threaded processing would take weeks
+- **Network heterogeneity**: Urban areas have rich transit; rural areas have minimal service
+- **Error recovery**: Partial failures should not require full re-runs
+
+This chapter presents **spatial partitioning** and **parallel processing** strategies that make national-scale routing computationally feasible.
+
+## Key Strategies
+
+**1. Spatial Partitioning**
+- Split national analysis into province-level chunks
+- Process each chunk independently
+- Combine results after routing completes
+
+**2. Parallel Processing**
+- Use `{future}` and `{furrr}` for multi-core execution
+- Configure workers based on available RAM
+- Implement progress tracking and logging
+
+**3. Incremental Saving**
+- Write results after each chunk completes
+- Enable restart from partial completion
+- Avoid memory overflow from accumulated results
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+- Implement spatial partitioning for large-scale routing
+- Configure parallel processing with `{future}` and `{furrr}`
+- Optimize memory usage for massive OD matrices
+- Monitor progress and handle computational errors
+- Adapt the workflow to different computational environments (laptop, server, cloud)

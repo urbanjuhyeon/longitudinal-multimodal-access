@@ -1,0 +1,16 @@
+# Discussion {#sec-discussion}
+
+## Introduction
+
+This chapter reflects on the methods, tools, and approaches presented throughout the book. We will discuss the strengths and limitations of the open-source accessibility modeling framework, compare it to alternative approaches, and consider future directions for research and practice.
+
+Key topics include the trade-offs between model complexity and usability, the role of open-source tools in democratizing accessibility analysis, and emerging trends in transportation modeling. We will also address common challenges practitioners face and offer guidance for overcoming them.
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+- Critically evaluate the strengths and limitations of the presented methods
+- Compare open-source approaches to commercial or proprietary alternatives
+- Identify areas for future methodological development
+- Understand the broader context of accessibility modeling in planning practice

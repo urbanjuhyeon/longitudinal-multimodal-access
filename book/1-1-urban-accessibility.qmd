@@ -1,0 +1,142 @@
+# Urban accessibility over time {#sec-urban-accessibility}
+
+## What is accessibility?
+
+Urban accessibility refers to the ease with which people can reach essential services, opportunities, and activities using available transportation systems. Unlike simple distance-based proximity, accessibility accounts for the complex interplay between:
+
+- **People**: Where individuals live and their mobility capabilities
+- **Places**: The spatial distribution of destinations (jobs, healthcare, education, banks)
+- **Transport**: The multimodal networks connecting origins to destinations
+
+This concept is fundamental to understanding urban equity and quality of life. A neighborhood might be geographically close to essential services but poorly accessible if transportation connections are inadequate or inconvenient.
+
+## The limitations of static accessibility
+
+Most accessibility analyses treat cities as frozen snapshots, calculating access at a single point in time. This static view misses critical dynamics:
+
+**Services relocate or close**
+
+- Bank branch consolidation leaves neighborhoods underserved
+- Healthcare facilities open in new locations
+- Supermarkets close in low-income areas
+
+**Transport networks evolve**
+
+- New transit lines extend service coverage
+- Route restructuring changes travel times
+- Infrastructure improvements alter commute patterns
+
+**Land use changes**
+
+- Residential development shifts population centers
+- Commercial zones emerge or decline
+- Urban sprawl extends city boundaries
+
+A single-year analysis cannot capture these transformations or their equity implications.
+
+## Why track accessibility over time?
+
+Longitudinal accessibility analysis reveals patterns invisible in cross-sectional studies:
+
+**Detecting growing inequalities**
+
+Service centralization often benefits well-connected urban cores while disadvantaging peripheral areas. Only temporal tracking shows whether gaps are widening or narrowing.
+
+**Evaluating policy impacts**
+
+Transport investments and service location policies play out over years. Longitudinal data connects interventions to outcomes, separating policy effects from background trends.
+
+**Understanding cumulative disadvantage**
+
+Communities experiencing persistent poor accessibility face compounding challenges in economic participation, health outcomes, and social mobility.
+
+## The multimodal dimension
+
+People reach destinations through different transportation modes with vastly different accessibility profiles:
+
+**Private vehicles** offer flexibility and speed but require:
+- Car ownership and maintenance costs
+- Driving ability
+- Parking availability
+- Tolerance for congestion
+
+**Public transit** provides affordable mobility but involves:
+- Fixed routes and schedules
+- Waiting and transfer times
+- Limited service coverage
+- Temporal availability (peak vs off-peak, weekday vs weekend)
+
+**Walking and cycling** are sustainable options constrained by:
+- Physical capability
+- Distance tolerance
+- Weather and topography
+- Infrastructure quality
+
+Analyzing only one mode obscures how accessibility is distributed across different population groups. A location might have excellent car accessibility but poor transit access—a pattern that systematically disadvantages lower-income, elderly, and disabled populations who disproportionately rely on public transport.
+
+## Banking accessibility in South Korea: A case study
+
+This book demonstrates longitudinal multimodal accessibility analysis through a concrete example: tracking access to banking services in South Korea from 2021 to 2023.
+
+**Why banking services?**
+
+Financial service access is essential for economic participation yet increasingly threatened by branch closures as banking digitalizes. Physical branches remain critical for:
+
+- Older adults less comfortable with digital banking
+- Complex transactions requiring in-person assistance
+- Communities with limited digital infrastructure
+
+**The South Korean context**
+
+South Korea experienced significant bank branch consolidation in the early 2020s, creating natural variation in accessibility changes across time and space. The country also provides high-quality open data:
+
+- GTFS transit schedules from KTDB (Korea Transport Database)
+- Comprehensive street networks from OpenStreetMap
+- Detailed census boundaries and population data
+
+**Analytical scope**
+
+We compare accessibility by private car versus public transit across approximately 50,000 enumeration districts, tracking how access changed over six time points (two per year, 2021-2023). This reveals:
+
+- Which communities lost banking access
+- Whether transit-dependent populations were disproportionately affected
+- How accessibility gaps evolved over time
+
+## Beyond this example
+
+While our case study focuses on banking in South Korea, the methods generalize to:
+
+- **Other service types**: Healthcare, education, retail, employment
+- **Other geographic contexts**: Any region with GTFS and street network data
+- **Other time periods**: Any span where comparable data exist
+
+The workflow presented in this book provides infrastructure for reproducible longitudinal accessibility analysis applicable wherever standardized transport and service location data are available.
+
+## Structure of this book
+
+The remaining chapters build toward national-scale longitudinal accessibility analysis:
+
+**SECTION 1: Introduction** (this section)
+
+- Chapter 2 introduces GTFS and OpenStreetMap data
+- Chapter 3 explains the r5r routing engine
+
+**SECTION 2: Methodology Development**
+
+- Network setup and parameters
+- Three routing patterns: one-to-one, one-to-many, many-to-many
+- Building reusable code for longitudinal analysis
+
+**SECTION 3: Pilot Application**
+
+- Small-scale implementation in Paldal-gu, Suwon
+- Method validation with manageable data
+- Development of computational strategies
+
+**SECTION 4: National-Scale Application**
+
+- Scaling to 50,000+ origins and 6 time points
+- Spatial partitioning and parallel processing
+- Results visualization and interpretation
+
+By the end, you will understand both the conceptual foundations and practical implementation of reproducible longitudinal multimodal accessibility research.

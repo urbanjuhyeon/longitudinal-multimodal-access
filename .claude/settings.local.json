@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash($PSVersionTable.PSVersion)",
+      "Bash(powershell.exe -Command \"$PSVersionTable.PSVersion\")",
+      "Bash(powershell.exe -Command '$PSVersionTable.PSVersion')",
+      "Bash(winget install:*)",
+      "Bash(pwsh.exe -Command:*)",
+      "Bash(start:*)",
+      "Bash(quarto render:*)",
+      "Bash(quarto preview:*)",
+      "Bash(timeout 5 cmd:*)",
+      "Bash(timeout 10 cmd:*)",
+      "Bash(cmd /c \"mklink /D pilot_paldal ..\\pilot_paldal\")",
+      "Bash(powershell.exe -Command \"New-Item -ItemType SymbolicLink -Path ''book\\pilot_paldal'' -Target ''..\\pilot_paldal''\")",
+      "Bash(powershell.exe:*)",
+      "Bash(cmd /c \"mklink /J book\\pilot_paldal pilot_paldal\")",
+      "Bash(ren:*)",
+      "Bash(dir:*)",
+      "Bash(nul)",
+      "Bash(findstr:*)",
+      "Bash(find:*)",
+      "Bash(md5sum:*)",
+      "Bash(xargs rm:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:ipeagit.github.io)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(test:*)",
+      "Bash(tree:*)",
+      "WebFetch(domain:code.claude.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

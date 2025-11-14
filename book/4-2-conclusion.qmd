@@ -1,0 +1,30 @@
+# Conclusion {#sec-conclusion}
+
+## Introduction
+
+This final chapter synthesizes the key concepts, methods, and lessons from the book. We will review the complete workflow for multi-modal accessibility modeling using open-source tools and reflect on the practical skills developed throughout the chapters.
+
+We will also provide guidance on next steps for readers who want to deepen their expertise, including recommendations for further reading, online resources, and opportunities to engage with the broader community of accessibility researchers and practitioners.
+
+## Summary of Key Concepts
+
+Throughout this book, we have covered:
+
+- Data acquisition and preprocessing for multi-modal networks
+- Network construction and integration of multiple transportation modes
+- Accessibility calculation and interpretation
+- Scaling workflows for large-scale analysis
+- Practical application to real-world planning challenges
+
+## Next Steps
+
+As you continue your journey in accessibility modeling, consider:
+
+- Applying these methods to your own study areas and research questions
+- Contributing to open-source transportation analysis tools
+- Engaging with the community through conferences, workshops, and online forums
+- Exploring advanced topics such as dynamic accessibility, equity metrics, and scenario planning
+
+## Final Thoughts
+
+Accessibility analysis is a powerful tool for understanding and improving urban transportation systems. By using open-source tools and reproducible workflows, we can make these methods accessible to a wider audience and contribute to more equitable and sustainable cities.
