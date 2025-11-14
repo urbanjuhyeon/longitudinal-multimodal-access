@@ -9,8 +9,6 @@ book:
   date: "2025. 10. 30."
   repo-url: https://github.com/urbanjuhyeon/longitudinal-multimodal-access
   repo-actions: [edit, issue]
-  downloads: [pdf]
-  sharing: [twitter, facebook, linkedin]
   chapters:
     - index.qmd
     - part: "Introduction"
@@ -42,6 +40,14 @@ format:
       - brand
     css: custom.css
     number-depth: 3
+    sidebar:
+      tools:
+        - icon: download
+          href: Modeling-Longitudinal-Multi-Modal-Accessibility--An-Open-Source-Workflow-with-R5R.pdf
+          text: "Download PDF"
+        - icon: github
+          href: https://github.com/urbanjuhyeon/longitudinal-multimodal-access
+          text: "GitHub Repository"
   pdf:
     documentclass: scrreprt
     number-depth: 3
