@@ -38,6 +38,9 @@ format:
       - brand
     css: custom.css
     number-depth: 3
+  pdf:
+    documentclass: scrreprt
+    number-depth: 3
 
 
 
