@@ -7,6 +7,10 @@ book:
   title: "Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R"
   author: "Juhyeon Park"
   date: "2025. 10. 30."
+  repo-url: https://github.com/urbanjuhyeon/longitudinal-multimodal-access
+  repo-actions: [edit, issue]
+  downloads: [pdf]
+  sharing: [twitter, facebook, linkedin]
   chapters:
     - index.qmd
     - part: "Introduction"
