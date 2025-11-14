@@ -30,8 +30,8 @@ scratch/
 # ========================
 # Book build outputs
 # ========================
-book/_book/
-book/.quarto/
+# book/_book/
+# book/.quarto/
 
 # ========================
 # System files
