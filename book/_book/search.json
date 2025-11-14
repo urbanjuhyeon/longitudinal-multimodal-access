@@ -1,0 +1,958 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R",
+    "section": "",
+    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html",
+    "href": "1-1-urban-accessibility.html",
+    "title": "1  Urban accessibility over time",
+    "section": "",
+    "text": "1.1 What is accessibility?\nUrban accessibility refers to the ease with which people can reach essential services, opportunities, and activities using available transportation systems. Unlike simple distance-based proximity, accessibility accounts for the complex interplay between:\nThis concept is fundamental to understanding urban equity and quality of life. A neighborhood might be geographically close to essential services but poorly accessible if transportation connections are inadequate or inconvenient.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#what-is-accessibility",
+    "href": "1-1-urban-accessibility.html#what-is-accessibility",
+    "title": "1  Urban accessibility over time",
+    "section": "",
+    "text": "People: Where individuals live and their mobility capabilities\nPlaces: The spatial distribution of destinations (jobs, healthcare, education, banks)\nTransport: The multimodal networks connecting origins to destinations",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#the-limitations-of-static-accessibility",
+    "href": "1-1-urban-accessibility.html#the-limitations-of-static-accessibility",
+    "title": "1  Urban accessibility over time",
+    "section": "1.2 The limitations of static accessibility",
+    "text": "1.2 The limitations of static accessibility\nMost accessibility analyses treat cities as frozen snapshots, calculating access at a single point in time. This static view misses critical dynamics:\nServices relocate or close\n\nBank branch consolidation leaves neighborhoods underserved\nHealthcare facilities open in new locations\nSupermarkets close in low-income areas\n\nTransport networks evolve\n\nNew transit lines extend service coverage\nRoute restructuring changes travel times\nInfrastructure improvements alter commute patterns\n\nLand use changes\n\nResidential development shifts population centers\nCommercial zones emerge or decline\nUrban sprawl extends city boundaries\n\nA single-year analysis cannot capture these transformations or their equity implications.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#why-track-accessibility-over-time",
+    "href": "1-1-urban-accessibility.html#why-track-accessibility-over-time",
+    "title": "1  Urban accessibility over time",
+    "section": "1.3 Why track accessibility over time?",
+    "text": "1.3 Why track accessibility over time?\nLongitudinal accessibility analysis reveals patterns invisible in cross-sectional studies:\nDetecting growing inequalities\nService centralization often benefits well-connected urban cores while disadvantaging peripheral areas. Only temporal tracking shows whether gaps are widening or narrowing.\nEvaluating policy impacts\nTransport investments and service location policies play out over years. Longitudinal data connects interventions to outcomes, separating policy effects from background trends.\nUnderstanding cumulative disadvantage\nCommunities experiencing persistent poor accessibility face compounding challenges in economic participation, health outcomes, and social mobility.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#the-multimodal-dimension",
+    "href": "1-1-urban-accessibility.html#the-multimodal-dimension",
+    "title": "1  Urban accessibility over time",
+    "section": "1.4 The multimodal dimension",
+    "text": "1.4 The multimodal dimension\nPeople reach destinations through different transportation modes with vastly different accessibility profiles:\nPrivate vehicles offer flexibility and speed but require: - Car ownership and maintenance costs - Driving ability - Parking availability - Tolerance for congestion\nPublic transit provides affordable mobility but involves: - Fixed routes and schedules - Waiting and transfer times - Limited service coverage - Temporal availability (peak vs off-peak, weekday vs weekend)\nWalking and cycling are sustainable options constrained by: - Physical capability - Distance tolerance - Weather and topography - Infrastructure quality\nAnalyzing only one mode obscures how accessibility is distributed across different population groups. A location might have excellent car accessibility but poor transit access—a pattern that systematically disadvantages lower-income, elderly, and disabled populations who disproportionately rely on public transport.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#banking-accessibility-in-south-korea-a-case-study",
+    "href": "1-1-urban-accessibility.html#banking-accessibility-in-south-korea-a-case-study",
+    "title": "1  Urban accessibility over time",
+    "section": "1.5 Banking accessibility in South Korea: A case study",
+    "text": "1.5 Banking accessibility in South Korea: A case study\nThis book demonstrates longitudinal multimodal accessibility analysis through a concrete example: tracking access to banking services in South Korea from 2021 to 2023.\nWhy banking services?\nFinancial service access is essential for economic participation yet increasingly threatened by branch closures as banking digitalizes. Physical branches remain critical for:\n\nOlder adults less comfortable with digital banking\nComplex transactions requiring in-person assistance\nCommunities with limited digital infrastructure\n\nThe South Korean context\nSouth Korea experienced significant bank branch consolidation in the early 2020s, creating natural variation in accessibility changes across time and space. The country also provides high-quality open data:\n\nGTFS transit schedules from KTDB (Korea Transport Database)\nComprehensive street networks from OpenStreetMap\nDetailed census boundaries and population data\n\nAnalytical scope\nWe compare accessibility by private car versus public transit across approximately 50,000 enumeration districts, tracking how access changed over six time points (two per year, 2021-2023). This reveals:\n\nWhich communities lost banking access\nWhether transit-dependent populations were disproportionately affected\nHow accessibility gaps evolved over time",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#beyond-this-example",
+    "href": "1-1-urban-accessibility.html#beyond-this-example",
+    "title": "1  Urban accessibility over time",
+    "section": "1.6 Beyond this example",
+    "text": "1.6 Beyond this example\nWhile our case study focuses on banking in South Korea, the methods generalize to:\n\nOther service types: Healthcare, education, retail, employment\nOther geographic contexts: Any region with GTFS and street network data\nOther time periods: Any span where comparable data exist\n\nThe workflow presented in this book provides infrastructure for reproducible longitudinal accessibility analysis applicable wherever standardized transport and service location data are available.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-1-urban-accessibility.html#structure-of-this-book",
+    "href": "1-1-urban-accessibility.html#structure-of-this-book",
+    "title": "1  Urban accessibility over time",
+    "section": "1.7 Structure of this book",
+    "text": "1.7 Structure of this book\nThe remaining chapters build toward national-scale longitudinal accessibility analysis:\nSECTION 1: Introduction (this section)\n\nChapter 2 introduces GTFS and OpenStreetMap data\nChapter 3 explains the r5r routing engine\n\nSECTION 2: Methodology Development\n\nNetwork setup and parameters\nThree routing patterns: one-to-one, one-to-many, many-to-many\nBuilding reusable code for longitudinal analysis\n\nSECTION 3: Pilot Application\n\nSmall-scale implementation in Paldal-gu, Suwon\nMethod validation with manageable data\nDevelopment of computational strategies\n\nSECTION 4: National-Scale Application\n\nScaling to 50,000+ origins and 6 time points\nSpatial partitioning and parallel processing\nResults visualization and interpretation\n\nBy the end, you will understand both the conceptual foundations and practical implementation of reproducible longitudinal multimodal accessibility research.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Urban accessibility over time</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html",
+    "href": "1-2-multimodal-data.html",
+    "title": "2  Multimodal transport data",
+    "section": "",
+    "text": "2.1 GTFS: General Transit Feed Specification\nMultimodal accessibility analysis requires two foundational data types: public transit schedules and street network geometry. Fortunately, global standards and collaborative mapping efforts have made both increasingly available as open data.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#gtfs-general-transit-feed-specification",
+    "href": "1-2-multimodal-data.html#gtfs-general-transit-feed-specification",
+    "title": "2  Multimodal transport data",
+    "section": "",
+    "text": "2.1.1 What is GTFS?\nThe General Transit Feed Specification (GTFS) is a standardized data format for public transportation schedules and geographic information. Originally developed by Google in 2005 for trip planning applications, GTFS has become the de facto international standard for representing transit systems.\nA GTFS dataset is a collection of text files (packaged as a .zip archive) containing:\n\nRoutes: Bus, metro, and train lines\nStops: Station and stop locations with coordinates\nTrips: Specific vehicle journeys along routes\nStop times: When each trip arrives/departs each stop\nCalendar: Service availability by date and day of week\nShapes (optional): Geographic paths that routes follow\n\n\n\n2.1.2 Why GTFS matters for accessibility\nGTFS enables realistic transit routing because it captures temporal complexity:\n\nSchedule accuracy: Actual departure/arrival times, not assumed frequencies\nService variation: Different schedules for weekday/weekend, peak/off-peak\nTemporal validity: Calendar defines when schedules apply\nMultimodal integration: Includes walk transfers between stops/lines\n\nThis temporal dimension is critical for longitudinal analysis. Transit service changes—new routes, frequency adjustments, coverage expansion—are reflected in updated GTFS feeds, making it possible to track how public transport accessibility evolves.\n\n\n2.1.3 Where to obtain GTFS\nGTFS availability has grown dramatically:\nGlobal repositories\n\nMobility Database: 2,000+ feeds worldwide\nTransitFeeds: Historical and current feeds\nTransit agency websites: Many agencies publish GTFS directly\n\nSouth Korea\n\nKTDB (Korea Transport Database): National GTFS feeds\nCovers intercity, metropolitan, and local transit systems\nAvailable for download with registration\n\nTemporal coverage\nFor longitudinal analysis, you need GTFS snapshots from multiple time points. Some agencies maintain archives; others require manual collection over time. The Mobility Database and TransitFeeds preserve historical versions.\n\n\n\n\n\n\nNoteData acquisition in this book\n\n\n\nDetailed GTFS download and preprocessing workflows for South Korea are covered in:\n\nSection 3.2: Pilot data preparation (Paldal-gu)\nSection 4.2: National data preparation\n\nHere we focus on conceptual understanding rather than step-by-step data acquisition.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#openstreetmap-collaborative-street-networks",
+    "href": "1-2-multimodal-data.html#openstreetmap-collaborative-street-networks",
+    "title": "2  Multimodal transport data",
+    "section": "2.2 OpenStreetMap: Collaborative street networks",
+    "text": "2.2 OpenStreetMap: Collaborative street networks\n\n2.2.1 What is OpenStreetMap?\nOpenStreetMap (OSM) is a collaborative project creating a free, editable map of the world. Think of it as “Wikipedia for maps”—volunteers contribute geographic data including:\n\nRoad networks: Streets, highways, pedestrian paths, cycle lanes\nRoad attributes: Speed limits, surface types, lane counts\nPoints of interest: Buildings, amenities, landmarks\nAdministrative boundaries: City, district, neighborhood borders\n\nFor accessibility analysis, we primarily use OSM’s street network data.\n\n\n2.2.2 Why OSM for accessibility?\nOSM offers unique advantages over proprietary map data:\nOpen and free\n\nNo licensing costs or usage restrictions\nEnables reproducible research\n\nGlobal coverage\n\nEspecially strong in areas without commercial mapping\nCommunity maintains and updates continuously\n\nRich attributes\n\nTags describe road types (motorway, residential, footway)\nAttributes enable mode-specific routing (car vs walk vs bike)\n\nProgrammable access\n\nAPIs and tools for bulk download\nStandard formats (.pbf, .osm) work with routing engines\n\n\n\n2.2.3 OSM data structure\nOSM represents geography through three primitives:\n\nNodes: Points with latitude/longitude\nWays: Ordered lists of nodes forming lines or polygons\nRelations: Logical groupings of nodes/ways (e.g., bus routes)\n\nFor routing, we need ways representing streets, tagged with attributes like:\n\nhighway=motorway, highway=residential, highway=footway\nmaxspeed=50\nlanes=2\nsurface=asphalt\n\n\n\n2.2.4 Obtaining OSM data\nGlobal extracts\n\nGeofabrik: Daily-updated country/region extracts\nBBBike: Custom area extracts\n\nOSM APIs\n\nOverpass API: Custom queries for specific features\nosmnx (Python), osmdata (R): Programmatic access\n\nSouth Korea\nGeofabrik provides South Korea extracts updated daily in .pbf (Protocolbuffer Binary Format), the compact format used by routing engines.\n\n\n\n\n\n\nImportantTemporal consistency\n\n\n\nFor longitudinal analysis, OSM presents a challenge: the database continuously updates. To ensure temporal validity:\n\nDownload OSM extracts from dates matching your GTFS feeds\nUse services archiving historical OSM data (e.g., Geofabrik’s historical extracts)\nIn practice, road network changes are slower than transit schedule changes, making minor temporal mismatches acceptable for most analyses",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#gtfs-osm-complementary-data",
+    "href": "1-2-multimodal-data.html#gtfs-osm-complementary-data",
+    "title": "2  Multimodal transport data",
+    "section": "2.3 GTFS + OSM: Complementary data",
+    "text": "2.3 GTFS + OSM: Complementary data\nThese two data sources form a complete multimodal transport network:\n\n\n\n\n\n\n\n\nData source\nRepresents\nEnables routing for\n\n\n\n\nGTFS\nPublic transit routes, schedules, stops\nBus, metro, train travel\n\n\nOSM\nStreet networks, paths\nWalking, cycling, driving\n\n\n\nIntegration logic\nMultimodal routing engines like R5 (discussed in Chapter 3) combine these datasets:\n\nTransit network: Constructed from GTFS stops, routes, and schedules\nStreet network: Built from OSM ways tagged for different modes\nTransfers: Walking connections between transit stops use OSM pedestrian paths\nAccess/egress: Trips start/end with walks along OSM streets to/from transit\n\nFor example, a public transit trip from home to a bank might involve:\n\nWalk from home to bus stop (OSM pedestrian network)\nBus journey (GTFS schedule)\nTransfer walk between bus and metro (OSM + GTFS stop locations)\nMetro journey (GTFS schedule)\nWalk from metro station to bank (OSM pedestrian network)",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#temporal-dimensions-in-longitudinal-analysis",
+    "href": "1-2-multimodal-data.html#temporal-dimensions-in-longitudinal-analysis",
+    "title": "2  Multimodal transport data",
+    "section": "2.4 Temporal dimensions in longitudinal analysis",
+    "text": "2.4 Temporal dimensions in longitudinal analysis\nFor longitudinal accessibility studies, we need matched GTFS and OSM snapshots at each time point:\nThis book’s temporal structure\n\n\n\nYear\nTime points\nGTFS source\nOSM source\n\n\n\n\n2021\nJune, December\nKTDB\nGeofabrik (matching dates)\n\n\n2022\nJune, December\nKTDB\nGeofabrik (matching dates)\n\n\n2023\nJune, December\nKTDB\nGeofabrik (matching dates)\n\n\n\nThis creates six multimodal network snapshots, enabling analysis of how accessibility changed over three years.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#data-quality-considerations",
+    "href": "1-2-multimodal-data.html#data-quality-considerations",
+    "title": "2  Multimodal transport data",
+    "section": "2.5 Data quality considerations",
+    "text": "2.5 Data quality considerations\nBoth GTFS and OSM rely on data contributions—by transit agencies and volunteers, respectively. Quality varies:\nGTFS quality signals\n\nOfficial agency feeds (higher trust)\nRegular updates (active maintenance)\nComplete shapes.txt (geographic accuracy)\nValidation tools (e.g., Google’s GTFS validator)\n\nOSM quality signals\n\nDensity of contributors in the region\nRecency of edits\nCompleteness of road network\nAttribute richness (speed limits, lanes, etc.)\n\nSouth Korea data quality\nBoth GTFS (from KTDB) and OSM have excellent coverage and quality in South Korea:\n\nKTDB provides official, validated GTFS feeds\nOSM road network is comprehensive, especially in urban areas\nActive OSM contributor community maintains currency",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#beyond-gtfs-and-osm",
+    "href": "1-2-multimodal-data.html#beyond-gtfs-and-osm",
+    "title": "2  Multimodal transport data",
+    "section": "2.6 Beyond GTFS and OSM",
+    "text": "2.6 Beyond GTFS and OSM\nWhile this book focuses on these two data sources, other data enrich accessibility analysis:\n\nPopulation data: Census boundaries and counts (where people live)\nPOI data: Service locations (banks, hospitals, schools)\nTopography: Elevation affecting walking/cycling difficulty\nReal-time data: Live transit positions, traffic speeds\n\nWe incorporate population and POI data in later sections. The methods presented here generalize to any accessibility analysis with GTFS and street network inputs.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-2-multimodal-data.html#whats-next",
+    "href": "1-2-multimodal-data.html#whats-next",
+    "title": "2  Multimodal transport data",
+    "section": "2.7 What’s next",
+    "text": "2.7 What’s next\nUnderstanding GTFS and OSM as standardized, open data sources is essential context. But how do we actually use these data to calculate travel times and accessibility? Chapter 3 introduces r5r, the routing engine that transforms GTFS and OSM into actionable multimodal accessibility estimates.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Multimodal transport data</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html",
+    "href": "1-3-routing-r5r.html",
+    "title": "3  Routing with r5r",
+    "section": "",
+    "text": "3.1 Why routing engines matter\nGTFS and OSM data provide the raw ingredients for accessibility analysis, but we need a routing engine to transform static data into dynamic travel time estimates. This chapter introduces r5r, the tool that powers the multimodal accessibility calculations throughout this book.\nSimple distance-based accessibility—measuring how many services fall within a radius—ignores transportation realities:\nRouting engines compute realistic travel times by simulating journeys through transportation networks, accounting for:\nThis transforms accessibility from a geometric problem (proximity) into a network problem (reachability).",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#why-routing-engines-matter",
+    "href": "1-3-routing-r5r.html#why-routing-engines-matter",
+    "title": "3  Routing with r5r",
+    "section": "",
+    "text": "A bank 2 km away by road might require a 15-minute drive or a 45-minute bus journey\nTwo destinations equidistant from an origin can have vastly different accessibility by transit\nNetwork connectivity, traffic speeds, transit schedules, and transfer requirements shape true accessibility\n\n\n\nRoad network topology and speeds\nTransit schedules and frequencies\nWaiting times and transfers\nMode-specific constraints (walk speed, vehicle access)",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#r5-rapid-realistic-routing",
+    "href": "1-3-routing-r5r.html#r5-rapid-realistic-routing",
+    "title": "3  Routing with r5r",
+    "section": "3.2 R5: Rapid Realistic Routing",
+    "text": "3.2 R5: Rapid Realistic Routing\nR5 (Rapid Realistic Routing on Real-world and Reimagined networks) is a high-performance multimodal routing engine developed by Conveyal. Written in Java, R5 specializes in:\nMultimodal routing\n\nCombines GTFS (transit) and OSM (streets) into a unified network\nHandles walk-transit-walk trip chains\nSupports car, transit, bicycle, and walking\n\nSpeed\n\nOptimized algorithms for large-scale analysis\nParallel computation of many-to-many travel times\nDesigned for city-scale and regional accessibility studies\n\nTemporal accuracy\n\nRespects transit schedules from GTFS\nAccounts for waiting times and departure time windows\nHandles frequency-based vs schedule-based services\n\nOpen source\n\nFree to use and modify\nActive development community\nWell-documented and validated\n\nR5 has become a standard tool in transport research and practice, powering accessibility analyses for transportation agencies, researchers, and advocacy organizations worldwide.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#r5r-r5-in-r",
+    "href": "1-3-routing-r5r.html#r5r-r5-in-r",
+    "title": "3  Routing with r5r",
+    "section": "3.3 r5r: R5 in R",
+    "text": "3.3 r5r: R5 in R\nWhile R5 is powerful, it’s a Java application requiring technical setup and command-line interaction. The r5r package (Pereira et al., 2021) makes R5 accessible to R users through a simple, intuitive interface.\nWhy r5r?\nEase of use\n\nInstall like any R package: install.packages(\"r5r\")\nNo Java configuration required (r5r handles it automatically)\nFamiliar R syntax and data structures\n\nIntegration with R ecosystem\n\nWorks seamlessly with sf for spatial data\nOutputs data.frames compatible with tidyverse workflows\nIntegrates with ggplot2 for visualization\n\nReproducible workflows\n\nAll code in R scripts or Quarto documents\nFacilitates version control and collaboration\nLowers barriers for replication studies\n\nActive development\n\nMaintained by researchers at Ipea (Brazil) and collaborators\nRegular updates incorporating R5 improvements\nStrong documentation and community support\n\nr5r has been widely adopted in transport geography and urban planning research, enabling reproducible multimodal accessibility studies across diverse contexts (see Pereira & Herszenhut, 2023 for an extensive guide).",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#how-r5r-works-a-conceptual-overview",
+    "href": "1-3-routing-r5r.html#how-r5r-works-a-conceptual-overview",
+    "title": "3  Routing with r5r",
+    "section": "3.4 How r5r works: A conceptual overview",
+    "text": "3.4 How r5r works: A conceptual overview\nr5r operates through a simple workflow:\n\n3.4.1 1. Build a multimodal network\nlibrary(r5r)\n\nr5r_core &lt;- setup_r5(\n  data_path = \"path/to/data\",  # Folder with GTFS .zip and OSM .pbf\n  verbose = FALSE\n)\nThis single function:\n\nLoads GTFS files (transit routes, stops, schedules)\nLoads OSM .pbf file (street network)\nConstructs a routable multimodal graph\nSaves a network.dat file for reuse\n\nThe r5r_core object is a connection to the R5 Java backend, ready for routing queries.\n\n\n3.4.2 2. Define origins and destinations\nOrigins and destinations are point locations with coordinates:\norigins &lt;- data.frame(\n  id = c(\"home_1\", \"home_2\"),\n  lon = c(126.9780, 126.9850),\n  lat = c(37.5665, 37.5700)\n)\n\ndestinations &lt;- data.frame(\n  id = c(\"bank_1\", \"bank_2\"),\n  lon = c(127.0000, 127.0100),\n  lat = c(37.5750, 37.5800)\n)\n\n\n3.4.3 3. Calculate travel times\ntravel_times &lt;- travel_time_matrix(\n  r5r_core = r5r_core,\n  origins = origins,\n  destinations = destinations,\n  mode = c(\"WALK\", \"TRANSIT\"),\n  departure_datetime = as.POSIXct(\"2021-06-15 09:00:00\"),\n  max_trip_duration = 120\n)\nr5r computes travel times for all origin-destination pairs, respecting:\n\nTransit schedules on the specified date/time\nMaximum trip duration constraint\nSpecified mode(s)\n\nThe output is a tidy data.frame:\n\n\n\nfrom_id\nto_id\ntravel_time_p50\n\n\n\n\nhome_1\nbank_1\n28\n\n\nhome_1\nbank_2\n35\n\n\nhome_2\nbank_1\n22\n\n\nhome_2\nbank_2\n30\n\n\n\n\n\n3.4.4 4. Calculate accessibility\nFor cumulative opportunity accessibility (how many destinations are reachable within a time threshold):\naccessibility &lt;- accessibility(\n  r5r_core = r5r_core,\n  origins = origins,\n  destinations = destinations,\n  mode = c(\"WALK\", \"TRANSIT\"),\n  departure_datetime = as.POSIXct(\"2021-06-15 09:00:00\"),\n  cutoffs = c(30, 60)  # minutes\n)\nOutput counts how many destinations each origin can reach:\n\n\n\nid\naccessibility_30min\naccessibility_60min\n\n\n\n\nhome_1\n1\n2\n\n\nhome_2\n2\n2",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#routing-patterns-for-different-questions",
+    "href": "1-3-routing-r5r.html#routing-patterns-for-different-questions",
+    "title": "3  Routing with r5r",
+    "section": "3.5 Routing patterns for different questions",
+    "text": "3.5 Routing patterns for different questions\nr5r supports several routing patterns suited to different research questions:\nOne-to-one routing\n\nCalculate travel time between a single origin and single destination\nUse case: Detailed route inspection, validation\nFunction: detailed_itineraries()\n\nOne-to-many routing\n\nCalculate travel times from one origin to many destinations\nUse case: Individual accessibility profiles, service areas\nFunction: travel_time_matrix() with one origin\n\nMany-to-many routing\n\nCalculate travel times for all origin-destination pairs\nUse case: City-wide accessibility, equity analysis\nFunction: travel_time_matrix() or accessibility() with many origins\n\nThis book demonstrates all three patterns:\n\nSection 2.2: One-to-one routing (understanding travel paths)\nSection 2.3: One-to-many routing (origin-centric accessibility)\nSection 2.4: Many-to-many routing (population-wide analysis)",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#multimodal-comparisons",
+    "href": "1-3-routing-r5r.html#multimodal-comparisons",
+    "title": "3  Routing with r5r",
+    "section": "3.6 Multimodal comparisons",
+    "text": "3.6 Multimodal comparisons\nA key strength of r5r is comparing accessibility across transportation modes. By running the same analysis with different mode parameters, we reveal modal disparities:\nPublic transit\nmode = c(\"WALK\", \"TRANSIT\")\nPrivate car\nmode = c(\"CAR\")\nWalk only\nmode = c(\"WALK\")\nThese comparisons expose equity issues: communities with excellent car accessibility but poor transit access face mobility disadvantages if they lack vehicle ownership.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#longitudinal-analysis-workflow",
+    "href": "1-3-routing-r5r.html#longitudinal-analysis-workflow",
+    "title": "3  Routing with r5r",
+    "section": "3.7 Longitudinal analysis workflow",
+    "text": "3.7 Longitudinal analysis workflow\nFor tracking accessibility over time, we repeat the routing process for each temporal snapshot:\n\nPrepare data: GTFS and OSM for each time point (e.g., 2021-06, 2021-12, 2022-06, …)\nBuild networks: setup_r5() for each time point’s data folder\nCalculate accessibility: Run routing with consistent origins, destinations, and parameters\nCompare results: Analyze how accessibility changed between time points\n\nComputational efficiency is critical at scale. This book develops strategies for:\n\nSpatial partitioning (divide-and-conquer large regions)\nParallel processing (utilize multiple CPU cores)\nResult caching (avoid redundant calculations)\n\nThese techniques are introduced in Section 2 (methodology) and applied in Sections 3-4 (pilot and national scales).",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#beyond-travel-time-other-r5r-capabilities",
+    "href": "1-3-routing-r5r.html#beyond-travel-time-other-r5r-capabilities",
+    "title": "3  Routing with r5r",
+    "section": "3.8 Beyond travel time: Other r5r capabilities",
+    "text": "3.8 Beyond travel time: Other r5r capabilities\nWhile this book focuses on travel time and accessibility calculations, r5r offers additional functionality:\n\nDetailed itineraries: Step-by-step route instructions\nIsochrones: Polygons showing areas reachable within time thresholds\nExpanded travel times: Monte Carlo sampling of multiple departure times\nCustom walk/bike speeds: Adjust for different population groups\n\nSee the r5r documentation and Pereira & Herszenhut (2023) for comprehensive coverage.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#reproducibility-and-openness",
+    "href": "1-3-routing-r5r.html#reproducibility-and-openness",
+    "title": "3  Routing with r5r",
+    "section": "3.9 Reproducibility and openness",
+    "text": "3.9 Reproducibility and openness\nUsing r5r aligns with open science principles:\nOpen-source tool\n\nFree to use, no licensing costs\nTransparent algorithms (inspect source code)\nCommunity-driven development\n\nOpen data\n\nWorks with GTFS and OSM (freely available)\nNo proprietary data dependencies\n\nReproducible workflows\n\nAll code in R scripts\nResults verifiable by others\nFacilitates peer review and replication\n\nThis book provides complete code for every analysis, enabling readers to reproduce results and adapt workflows to their own contexts.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#why-r",
+    "href": "1-3-routing-r5r.html#why-r",
+    "title": "3  Routing with r5r",
+    "section": "3.10 Why R?",
+    "text": "3.10 Why R?\nBeyond r5r, R offers rich ecosystem support for spatial accessibility research:\n\nData manipulation: dplyr, tidyr, data.table\nSpatial data: sf, terra, mapview\nVisualization: ggplot2, tmap, leaflet\nParallel computing: future, furrr, parallel\nReporting: Quarto, R Markdown\n\nThis integration means analyses can flow from data acquisition through routing to visualization and reporting—all in one environment.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#whats-next-the-structure-of-this-book",
+    "href": "1-3-routing-r5r.html#whats-next-the-structure-of-this-book",
+    "title": "3  Routing with r5r",
+    "section": "3.11 What’s next: The structure of this book",
+    "text": "3.11 What’s next: The structure of this book\nThe remaining sections build incrementally toward national-scale longitudinal accessibility analysis:\nSECTION 2: Methodology Development\nChapters 4-7 develop the analytical workflow using a pilot study area (Paldal-gu, Suwon):\n\nChapter 4: Network setup and parameter configuration\nChapter 5: One-to-one routing (route inspection and validation)\nChapter 6: One-to-many routing (origin-specific accessibility)\nChapter 7: Many-to-many routing (population-wide analysis)\n\nThis section establishes reusable code patterns and computational strategies with manageable data before scaling up.\nSECTION 3: Pilot Application\nChapters 8-11 apply the methodology to the pilot area:\n\nChapter 8: Case study context (Paldal-gu banking landscape)\nChapter 9: Data preparation (GTFS, OSM, POIs for pilot)\nChapter 10: Routing workflow execution\nChapter 11: Results visualization and interpretation\n\nThis validates the approach at a scale where outputs can be manually inspected and verified.\nSECTION 4: National-Scale Application\nChapters 12-15 extend to the entire country:\n\nChapter 12: National case study framing\nChapter 13: National data preparation (50,000+ census tracts, 6 time points)\nChapter 14: Computational strategies (spatial partitioning, parallel processing)\nChapter 15: National results and policy implications\n\nThis demonstrates how the workflow scales to research-grade analyses requiring substantial computational resources.\nSECTION 5: Discussion and Conclusion\nChapters 16-17 reflect on the approach:\n\nChapter 16: Methodological contributions, limitations, and extensions\nChapter 17: Implications for research and practice",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "1-3-routing-r5r.html#getting-started",
+    "href": "1-3-routing-r5r.html#getting-started",
+    "title": "3  Routing with r5r",
+    "section": "3.12 Getting started",
+    "text": "3.12 Getting started\nWith conceptual foundations established—understanding accessibility (Chapter 1), data sources (Chapter 2), and routing tools (Chapter 3)—we’re ready to build the analytical workflow.\nSection 2 begins with network setup: preparing r5r for multimodal routing with GTFS and OSM data.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Routing with r5r</span>"
+    ]
+  },
+  {
+    "objectID": "2-1-network-setup.html",
+    "href": "2-1-network-setup.html",
+    "title": "4  Network Setup and Parameters",
+    "section": "",
+    "text": "4.1 Introduction\nBefore conducting accessibility analysis, we must build a multimodal transportation network and configure routing parameters. This chapter demonstrates network setup using R5R, which combines OpenStreetMap road networks and GTFS transit data into a unified routing engine.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Network Setup and Parameters</span>"
+    ]
+  },
+  {
+    "objectID": "2-1-network-setup.html#building-the-r5r-network",
+    "href": "2-1-network-setup.html#building-the-r5r-network",
+    "title": "4  Network Setup and Parameters",
+    "section": "4.2 Building the R5R Network",
+    "text": "4.2 Building the R5R Network\nR5R constructs a multimodal network from the preprocessed data files we created in Chapter 2.\n\nlibrary(r5r)\n\n# Set paths\npilot_data_dir &lt;- \"outputs/pilot/data\"\n\n# Build network\nr5r_core &lt;- setup_r5(\n  data_path = pilot_data_dir,\n  verbose = TRUE,\n  overwrite = TRUE\n)\n\nThe setup_r5() function:\n\nLoads OSM .pbf file for street network\nLoads GTFS .zip file for transit schedules\nBuilds transfer connections between modes\nCreates a routable graph structure\nSaves network.dat file for reuse\n\n\n\n\n\n\n\nNoteBuild Time\n\n\n\nNetwork building takes 1-5 minutes depending on data size. The network.dat file can be reused for subsequent analyses with the same data.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Network Setup and Parameters</span>"
+    ]
+  },
+  {
+    "objectID": "2-1-network-setup.html#parameter-configuration",
+    "href": "2-1-network-setup.html#parameter-configuration",
+    "title": "4  Network Setup and Parameters",
+    "section": "4.3 Parameter Configuration",
+    "text": "4.3 Parameter Configuration\nRouting behavior is controlled by several key parameters that significantly affect results.\n\n4.3.1 Temporal Parameters\n\nANALYSIS_DATE &lt;- \"2021-06-15\"\nDEPARTURE_TIME &lt;- \"09:00:00\"\n\nDEPARTURE_TIME_obj &lt;- as.POSIXct(\n  paste(ANALYSIS_DATE, DEPARTURE_TIME)\n)\n\nConsiderations:\n\nDate must fall within GTFS calendar.txt validity period\nDeparture time affects transit availability (peak vs off-peak)\nMultiple time windows may be needed for robust analysis\n\n\n\n4.3.2 Routing Parameters\n\nMAX_WALK_TIME &lt;- 30        # minutes\nMAX_TRIP_DURATION &lt;- 120   # minutes\n\nParameter meanings:\n\nmax_walk_time: Maximum walking distance to/from transit or for entire walk-only trips\nmax_trip_duration: Total journey time limit (all modes combined)\n\n\n\n\n\n\n\nWarningWalk-Only Mode Exception\n\n\n\nFor walk-only routing, use extended max_walk_time (e.g., 120 minutes) and set shortest_path = FALSE to avoid routing errors.\n\n\n\n\n4.3.3 Mode-Specific Settings\n\n# Mode configurations\nmode_config &lt;- list(\n  \"PT\" = c(\"WALK\", \"TRANSIT\"),  # Public Transit\n  \"CAR\" = c(\"CAR\"),\n  \"WALK\" = c(\"WALK\")\n)\n\n# Shortest path settings\n# CAR, PT: shortest_path = TRUE\n# WALK: shortest_path = FALSE\n\nThe shortest_path parameter controls route optimization:\n\nTRUE: Minimize cumulative distance (may yield circuitous routes)\nFALSE: Consider multiple route alternatives\n\n\n\n4.3.4 Accessibility Thresholds\nFor many-to-many analyses, we define time thresholds to count accessible opportunities:\n\nTIME_THRESHOLD_CAR &lt;- 10   # minutes\nTIME_THRESHOLD_PT &lt;- 20    # minutes\n\nRationale:\n\nCar: 10 minutes covers ~5-8 km in urban areas\nPublic Transit: 20 minutes accounts for waiting and transfers\nThresholds should match study area buffer and research questions",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Network Setup and Parameters</span>"
+    ]
+  },
+  {
+    "objectID": "2-1-network-setup.html#pilot-study-area",
+    "href": "2-1-network-setup.html#pilot-study-area",
+    "title": "4  Network Setup and Parameters",
+    "section": "4.4 Pilot Study Area",
+    "text": "4.4 Pilot Study Area\nOur pilot test uses Paldal-gu (Suwon) with 1,500m buffer:\n\nStudy region: Paldal-gu (수원시 팔달구)\nYear: 2021\nBuffer: 1,500 meters\nCensus tracts: ~80 output areas\n\n\n\n\n\n\n\nFigure 4.1: Pilot study area showing GTFS stops and routes within the buffered boundary\n\n\n\n\n\n\n\n\n\nFigure 4.2: Pilot study area showing OSM road network within the buffered boundary",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Network Setup and Parameters</span>"
+    ]
+  },
+  {
+    "objectID": "2-1-network-setup.html#summary",
+    "href": "2-1-network-setup.html#summary",
+    "title": "4  Network Setup and Parameters",
+    "section": "4.5 Summary",
+    "text": "4.5 Summary\nThis chapter established:\n\n✓ R5R network building procedure\n✓ Key parameter definitions and their impacts\n✓ Pilot study area characteristics\n\nWith the network built and parameters configured, we proceed to test three Origin-Destination patterns in the following chapters.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Network Setup and Parameters</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html",
+    "href": "2-2-one-to-one.html",
+    "title": "5  One-to-One: Route Validation",
+    "section": "",
+    "text": "5.1 Introduction\nOne-to-one routing generates detailed itineraries between individual origin-destination pairs. This is useful for:",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#introduction",
+    "href": "2-2-one-to-one.html#introduction",
+    "title": "5  One-to-One: Route Validation",
+    "section": "",
+    "text": "Understanding routing behavior\nValidating parameter settings\nVisualizing multimodal journey segments\nDebugging unexpected results",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#defining-test-cases",
+    "href": "2-2-one-to-one.html#defining-test-cases",
+    "title": "5  One-to-One: Route Validation",
+    "section": "5.2 Defining Test Cases",
+    "text": "5.2 Defining Test Cases\nWe define three representative OD pairs in Paldal-gu:\n\nlibrary(dplyr)\n\nod_pairs &lt;- tribble(\n  ~origin_id,       ~origin_lon, ~origin_lat, ~dest_id,        ~dest_lon, ~dest_lat,  ~origin_name,             ~dest_name,\n  \"CentralLibrary\", 127.01216,   37.27325,    \"SuwonCityHall\", 127.02866, 37.26351,   \"Suwon Central Library\",  \"Suwon City Hall\",\n  \"PaldalOffice\",   127.02011,   37.28254,    \"SuwonCityHall\", 127.02866, 37.26351,   \"Paldal District Office\", \"Suwon City Hall\",\n  \"SuwonStation\",   127.00085,   37.26639,    \"SuwonCityHall\", 127.02866, 37.26351,   \"Suwon Station\",          \"Suwon City Hall\"\n) %&gt;%\n  mutate(name = paste(origin_id, dest_id, sep = \"_to_\"))",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#routing-function",
+    "href": "2-2-one-to-one.html#routing-function",
+    "title": "5  One-to-One: Route Validation",
+    "section": "5.3 Routing Function",
+    "text": "5.3 Routing Function\nWe create a function to handle mode-specific routing:\n\nget_route &lt;- function(origin_df, dest_df, travel_mode, mode_name, pair_name) {\n  mode_config &lt;- list(\n    \"PT\" = c(\"WALK\", \"TRANSIT\"),\n    \"CAR\" = c(\"CAR\"),\n    \"WALK\" = c(\"WALK\")\n  )\n\n  # WALK mode requires special settings\n  if (travel_mode == \"WALK\") {\n    route &lt;- detailed_itineraries(\n      r5r_network = r5r_core,\n      origins = origin_df,\n      destinations = dest_df,\n      mode = c(\"WALK\"),\n      departure_datetime = DEPARTURE_TIME_obj,\n      max_walk_time = 120,      # Extended for walk-only\n      max_trip_duration = 120,\n      shortest_path = FALSE,    # Important: FALSE for WALK\n      verbose = TRUE\n    )\n  } else {\n    route &lt;- detailed_itineraries(\n      r5r_network = r5r_core,\n      origins = origin_df,\n      destinations = dest_df,\n      mode = mode_config[[travel_mode]],\n      departure_datetime = DEPARTURE_TIME_obj,\n      max_walk_time = MAX_WALK_TIME,\n      max_trip_duration = MAX_TRIP_DURATION,\n      shortest_path = TRUE,\n      verbose = FALSE\n    )\n  }\n\n  return(route)\n}\n\n\n\n\n\n\n\nImportantWalk Mode Requirements\n\n\n\nWalk-only routing requires shortest_path = FALSE to avoid routing engine errors. This is a known R5R behavior.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#calculating-routes",
+    "href": "2-2-one-to-one.html#calculating-routes",
+    "title": "5  One-to-One: Route Validation",
+    "section": "5.4 Calculating Routes",
+    "text": "5.4 Calculating Routes\nWe calculate routes for all OD pairs and travel modes:\n\n# Calculate all combinations\nroute_list &lt;- od_pairs %&gt;%\n  crossing(tibble(\n    travel_mode = c(\"PT\", \"CAR\", \"WALK\"),\n    mode_name = c(\"Public Transit\", \"Car\", \"Walk Only\")\n  )) %&gt;%\n  mutate(\n    routes = pmap(\n      list(origin_id, origin_lon, origin_lat,\n           dest_id, dest_lon, dest_lat,\n           travel_mode, mode_name, name),\n      function(oid, olon, olat, did, dlon, dlat, tmode, mname, pname) {\n        origin_df &lt;- data.frame(id = oid, lon = olon, lat = olat)\n        dest_df &lt;- data.frame(id = did, lon = dlon, lat = dlat)\n        get_route(origin_df, dest_df, tmode, mname, pname)\n      }\n    )\n  ) %&gt;%\n  pull(routes)\n\n# Combine all routes\nall_routes_sf &lt;- route_list %&gt;%\n  discard(is.null) %&gt;%\n  bind_rows()",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#results-three-cases",
+    "href": "2-2-one-to-one.html#results-three-cases",
+    "title": "5  One-to-One: Route Validation",
+    "section": "5.5 Results: Three Cases",
+    "text": "5.5 Results: Three Cases\n\n5.5.1 Case 1: Central Library to City Hall\n\n\n\n\n\n\nFigure 5.1: Case 1 shows straightforward routing across all modes. Public Transit involves two bus transfers.\n\n\n\nObservations:\n\nCar: 8.4 minutes via direct road route\nPublic Transit: 18.3 minutes with two bus segments\nWalk: 25.1 minutes via pedestrian network\n\n\n\n5.5.2 Case 2: Paldal Office to City Hall\n\n\n\n\n\n\nFigure 5.2: Case 2 demonstrates circuitous public transit routing due to shortest_path=TRUE parameter\n\n\n\nObservations:\n\nPublic Transit route appears circuitous\nThis is caused by shortest_path = TRUE optimizing for distance rather than time\nAlgorithm minimizes cumulative distance across all segments (walk + bus)\nTrade-off between distance-optimal and time-optimal routing\n\n\n\n\n\n\n\nNoteShortest Path Behavior\n\n\n\nThe shortest_path = TRUE parameter minimizes total distance traveled, which can result in longer travel times. For time-based accessibility analysis, consider using shortest_path = FALSE and selecting the fastest route among alternatives.\n\n\n\n\n5.5.3 Case 3: Suwon Station to City Hall\n\n\n\n\n\n\nFigure 5.3: Case 3 shows subway (metro) routing between major transit nodes\n\n\n\nObservations:\n\nPublic Transit uses subway (metro line)\nDirect connection between two major stations\nShortest travel time among three cases",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#journey-timeline-visualization",
+    "href": "2-2-one-to-one.html#journey-timeline-visualization",
+    "title": "5  One-to-One: Route Validation",
+    "section": "5.6 Journey Timeline Visualization",
+    "text": "5.6 Journey Timeline Visualization\nSegment-level timelines help understand multimodal journey composition:\n\n\n\n\n\n\nFigure 5.4: Timeline breakdown for Case 1 showing time spent in each mode segment\n\n\n\nInsights from timeline:\n\nWalk segments at beginning/end of PT journeys\nBus segments show route numbers and durations\nCar mode has no intermediate segments\nTotal duration varies significantly by mode",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-2-one-to-one.html#key-observations",
+    "href": "2-2-one-to-one.html#key-observations",
+    "title": "5  One-to-One: Route Validation",
+    "section": "5.7 Key Observations",
+    "text": "5.7 Key Observations\nFrom one-to-one routing tests, we learned:\n✓ R5R generates detailed routes successfully for all three modes\n✓ Public transit routing includes realistic transfers with walking connections\n✓ Parameter impacts are significant: - shortest_path = TRUE can yield circuitous routes - max_walk_time affects access to transit stops - Mode-specific settings are necessary (especially for WALK)\n✓ Output includes rich segment information: - Mode, distance, duration per segment - Route IDs for transit - Geometry for mapping\n✓ Results are spatially coherent with expected travel patterns\nThese validation results confirm that R5R performs one-to-one routing reliably. We now proceed to test one-to-many patterns.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>One-to-One: Route Validation</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html",
+    "href": "2-3-one-to-many.html",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "",
+    "text": "6.1 Introduction\nOne-to-many routing calculates travel times from multiple origins to a single destination. This pattern is common in accessibility analysis for:",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html#introduction",
+    "href": "2-3-one-to-many.html#introduction",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "",
+    "text": "Access to major facilities (hospitals, government offices)\nTransit equity studies\nService area delineation\nIdentifying underserved populations",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html#test-case-access-to-city-hall",
+    "href": "2-3-one-to-many.html#test-case-access-to-city-hall",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "6.2 Test Case: Access to City Hall",
+    "text": "6.2 Test Case: Access to City Hall\nWe analyze travel times from all census tract centroids in Paldal-gu to Suwon City Hall.\n\n6.2.1 Preparing Origins\nCalculate centroids of census tracts:\n\n# Load census tract boundaries\ncensus_tract_sf &lt;- st_read(\"data/census/oa_bnd.gpkg\", quiet = TRUE)\n\n# Filter Paldal-gu\npaldal_tracts &lt;- census_tract_sf %&gt;%\n  filter(SIGUNGU_NM == \"수원시 팔달구\")\n\n# Calculate centroids\npaldal_centroids &lt;- paldal_tracts %&gt;%\n  st_transform(5179) %&gt;%  # Project to metric CRS\n  st_centroid() %&gt;%\n  st_transform(4326)      # Back to WGS84\n\n# Extract coordinates\npaldal_origins &lt;- paldal_centroids %&gt;%\n  mutate(\n    lon = st_coordinates(.)[, 1],\n    lat = st_coordinates(.)[, 2]\n  ) %&gt;%\n  st_drop_geometry() %&gt;%\n  select(id = TOT_REG_CD, lon, lat)\n\n\n\n\n\n\n\nNoteWhy Centroids?\n\n\n\nCensus tract centroids represent the average location of residents. While not perfect (population may be unevenly distributed), centroids are commonly used for regional accessibility analysis.\n\n\n\n\n6.2.2 Defining Destination\n\nsuwon_cityhall &lt;- data.frame(\n  id = \"SuwonCityHall\",\n  lon = 127.02866,\n  lat = 37.26351\n)",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html#calculating-travel-time-matrix",
+    "href": "2-3-one-to-many.html#calculating-travel-time-matrix",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "6.3 Calculating Travel Time Matrix",
+    "text": "6.3 Calculating Travel Time Matrix\nThe travel_time_matrix() function computes travel times from all origins to the destination:\n\n# Car mode\ncar_ttm &lt;- travel_time_matrix(\n  r5r_core = r5r_core,\n  origins = paldal_origins,\n  destinations = suwon_cityhall,\n  mode = c(\"CAR\"),\n  departure_datetime = DEPARTURE_TIME_obj,\n  max_walk_time = MAX_WALK_TIME,\n  max_trip_duration = MAX_TRIP_DURATION,\n  verbose = FALSE\n)\n\n# Public Transit mode\npt_ttm &lt;- travel_time_matrix(\n  r5r_core = r5r_core,\n  origins = paldal_origins,\n  destinations = suwon_cityhall,\n  mode = c(\"WALK\", \"TRANSIT\"),\n  departure_datetime = DEPARTURE_TIME_obj,\n  max_walk_time = MAX_WALK_TIME,\n  max_trip_duration = MAX_TRIP_DURATION,\n  verbose = FALSE\n)\n\nOutput structure:\n\n\n\nfrom_id\nto_id\ntravel_time_p50\n\n\n\n\n4111311100101\nSuwonCityHall\n12.5\n\n\n4111311100102\nSuwonCityHall\n15.2\n\n\n\nThe travel_time_p50 column shows median travel time in minutes.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html#spatial-visualization",
+    "href": "2-3-one-to-many.html#spatial-visualization",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "6.4 Spatial Visualization",
+    "text": "6.4 Spatial Visualization\nJoin travel times with census tract geometries:\n\n# Combine results\nall_accessibility &lt;- bind_rows(\n  car_ttm %&gt;% mutate(mode = \"Car\"),\n  pt_ttm %&gt;% mutate(mode = \"Public Transit\")\n)\n\n# Join with spatial data\npaldal_accessibility &lt;- paldal_tracts %&gt;%\n  select(TOT_REG_CD, geom) %&gt;%\n  inner_join(\n    all_accessibility,\n    by = c(\"TOT_REG_CD\" = \"from_id\")\n  )\n\n\n6.4.1 Results\n\n\n\n\n\n\nFigure 6.1: Travel time to Suwon City Hall from Paldal-gu census tracts by mode\n\n\n\nKey Patterns:\n\nCar accessibility: 5-15 minutes across most tracts\n\nShortest: ~5 minutes (near City Hall)\nLongest: ~15 minutes (northern edge)\nMean: ~8 minutes\n\nPublic Transit accessibility: 10-30 minutes\n\nShortest: ~10 minutes (near transit corridors)\nLongest: ~30 minutes (transit service gaps)\nMean: ~20 minutes\n\nSpatial inequality: 2-3× difference between best and worst served areas\n\n\n\n\n\n\n\nImportantTransit Equity Implications\n\n\n\nAreas with poor public transit accessibility may face mobility challenges, particularly for car-free households. Northern tracts show notably longer transit times.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html#summary-statistics",
+    "href": "2-3-one-to-many.html#summary-statistics",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "6.5 Summary Statistics",
+    "text": "6.5 Summary Statistics\n\npaldal_accessibility %&gt;%\n  st_drop_geometry() %&gt;%\n  group_by(mode) %&gt;%\n  summarise(\n    n = n(),\n    min = min(travel_time_p50),\n    mean = mean(travel_time_p50),\n    max = max(travel_time_p50),\n    sd = sd(travel_time_p50)\n  )\n\n\n\n\nMode\nN\nMin\nMean\nMax\nSD\n\n\n\n\nCar\n82\n5.2\n8.4\n14.8\n2.3\n\n\nPublic Transit\n78\n10.5\n19.7\n29.4\n5.1",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-3-one-to-many.html#key-observations",
+    "href": "2-3-one-to-many.html#key-observations",
+    "title": "6  One-to-Many: Transit Access",
+    "section": "6.6 Key Observations",
+    "text": "6.6 Key Observations\nFrom one-to-many testing:\n✓ R5R successfully calculates N×1 travel time matrices\n✓ Spatial patterns are coherent: - Travel times increase with distance - Transit times show corridor effects - Car accessibility more uniform\n✓ Mode differences are substantial: - Public transit takes 2-3× longer on average - Variability is higher for transit (SD = 5.1 vs 2.3)\n✓ Missing values indicate routing failures: - Some census tracts unreachable by public transit within time limit - All tracts reachable by car\n✓ Computation time is reasonable: ~30 seconds for 80+ origins\nThese results demonstrate that R5R can efficiently handle one-to-many routing at neighborhood scale. Next, we test many-to-many patterns with multiple destinations.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>One-to-Many: Transit Access</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html",
+    "href": "2-4-many-to-many.html",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "",
+    "text": "7.1 Introduction\nMany-to-many routing calculates travel times from multiple origins to multiple destinations. This is essential for:",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#introduction",
+    "href": "2-4-many-to-many.html#introduction",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "",
+    "text": "Measuring access to distributed services (restaurants, banks, clinics)\nCumulative opportunity accessibility\nService coverage analysis\nLocation optimization",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#test-case-restaurant-accessibility",
+    "href": "2-4-many-to-many.html#test-case-restaurant-accessibility",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.2 Test Case: Restaurant Accessibility",
+    "text": "7.2 Test Case: Restaurant Accessibility\nWe analyze access to Chinese restaurants from census tract centroids in Paldal-gu.\n\n7.2.1 Loading Destination Data\n\n# Load restaurant data\nchinese_restaurant_path &lt;- \"outputs/pilot/document/일반음식점(중국식)현황.csv\"\nchinese_restaurants &lt;- read.csv(\n  chinese_restaurant_path,\n  fileEncoding = \"UTF-8\"\n)\n\n# Clean and filter\nrestaurants_clean &lt;- chinese_restaurants %&gt;%\n  filter(!is.na(WGS84위도) & !is.na(WGS84경도)) %&gt;%\n  filter(영업상태명 == \"영업\") %&gt;%\n  mutate(\n    lat = WGS84위도,\n    lon = WGS84경도,\n    id = paste0(\"restaurant_\", row_number())\n  ) %&gt;%\n  select(id, lon, lat, everything())\n\n# Convert to SF for mapping\nrestaurants_sf &lt;- restaurants_clean %&gt;%\n  st_as_sf(coords = c(\"lon\", \"lat\"), crs = 4326)\n\n\n\n\n\n\n\nFigure 7.1: Location of Chinese restaurants in Paldal-gu study area",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#setting-time-thresholds",
+    "href": "2-4-many-to-many.html#setting-time-thresholds",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.3 Setting Time Thresholds",
+    "text": "7.3 Setting Time Thresholds\nFor many-to-many analysis, we count opportunities reachable within time thresholds:\n\nTIME_THRESHOLD_CAR &lt;- 10   # minutes\nTIME_THRESHOLD_PT &lt;- 20    # minutes\n\nRationale:\n\n10 minutes by car covers ~5-8 km, appropriate for local dining\n20 minutes by public transit accounts for walking, waiting, and transfers\nThresholds aligned with 1,500m buffer used in data preparation",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#calculating-many-to-many-matrix",
+    "href": "2-4-many-to-many.html#calculating-many-to-many-matrix",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.4 Calculating Many-to-Many Matrix",
+    "text": "7.4 Calculating Many-to-Many Matrix\n\n# Prepare destination data\nrestaurant_destinations &lt;- restaurants_clean %&gt;%\n  select(id, lon, lat)\n\n# Car accessibility\ncar_ttm &lt;- travel_time_matrix(\n  r5r_core = r5r_core,\n  origins = paldal_origins,\n  destinations = restaurant_destinations,\n  mode = c(\"CAR\"),\n  departure_datetime = DEPARTURE_TIME_obj,\n  max_walk_time = MAX_WALK_TIME,\n  max_trip_duration = TIME_THRESHOLD_CAR,  # Use threshold\n  verbose = FALSE\n)\n\n# Public Transit accessibility\npt_ttm &lt;- travel_time_matrix(\n  r5r_core = r5r_core,\n  origins = paldal_origins,\n  destinations = restaurant_destinations,\n  mode = c(\"WALK\", \"TRANSIT\"),\n  departure_datetime = DEPARTURE_TIME_obj,\n  max_walk_time = MAX_WALK_TIME,\n  max_trip_duration = TIME_THRESHOLD_PT,  # Use threshold\n  verbose = FALSE\n)\n\nMatrix dimensions:\n\nOrigins: ~80 census tracts\nDestinations: ~150 restaurants\nTotal OD pairs: 80 × 150 = 12,000\nComputation time: ~2-3 minutes",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#counting-accessible-opportunities",
+    "href": "2-4-many-to-many.html#counting-accessible-opportunities",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.5 Counting Accessible Opportunities",
+    "text": "7.5 Counting Accessible Opportunities\nAggregate by origin to count reachable restaurants:\n\n# Car: count restaurants within 10 minutes\ncar_access_count &lt;- car_ttm %&gt;%\n  filter(travel_time_p50 &lt;= TIME_THRESHOLD_CAR) %&gt;%\n  group_by(from_id) %&gt;%\n  summarise(\n    accessible_restaurants_car = n(),\n    min_time_car = min(travel_time_p50),\n    mean_time_car = mean(travel_time_p50)\n  )\n\n# Public Transit: count restaurants within 20 minutes\npt_access_count &lt;- pt_ttm %&gt;%\n  filter(travel_time_p50 &lt;= TIME_THRESHOLD_PT) %&gt;%\n  group_by(from_id) %&gt;%\n  summarise(\n    accessible_restaurants_pt = n(),\n    min_time_pt = min(travel_time_p50),\n    mean_time_pt = mean(travel_time_p50)\n  )",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#spatial-visualization",
+    "href": "2-4-many-to-many.html#spatial-visualization",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.6 Spatial Visualization",
+    "text": "7.6 Spatial Visualization\nJoin counts with census tract geometries:\n\nrestaurant_accessibility &lt;- paldal_tracts %&gt;%\n  select(TOT_REG_CD, geom) %&gt;%\n  left_join(car_access_count, by = c(\"TOT_REG_CD\" = \"from_id\")) %&gt;%\n  left_join(pt_access_count, by = c(\"TOT_REG_CD\" = \"from_id\")) %&gt;%\n  mutate(\n    accessible_restaurants_car = replace_na(accessible_restaurants_car, 0),\n    accessible_restaurants_pt = replace_na(accessible_restaurants_pt, 0)\n  )\n\n\n7.6.1 Results\n\n\n\n\n\n\nFigure 7.2: Number of Chinese restaurants accessible within time thresholds by mode\n\n\n\nKey Patterns:\n\nCar accessibility (10 min):\n\nMean: ~45 restaurants accessible\nRange: 20-80 restaurants\nHigh accessibility near restaurant clusters\n\nPublic Transit accessibility (20 min):\n\nMean: ~25 restaurants accessible\nRange: 0-50 restaurants\nLower accessibility despite longer time threshold\n\nSpatial inequality:\n\nCentral tracts have good access by both modes\nPeripheral tracts heavily dependent on cars\nSome tracts have zero PT access to restaurants\n\n\n\n\n\n\n\n\nImportantService Access Inequality\n\n\n\nEven with a 20-minute threshold, public transit users have access to ~50% fewer restaurants compared to car users with only 10 minutes. This highlights modal disparities in service accessibility.",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#summary-statistics",
+    "href": "2-4-many-to-many.html#summary-statistics",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.7 Summary Statistics",
+    "text": "7.7 Summary Statistics\n\nrestaurant_accessibility %&gt;%\n  st_drop_geometry() %&gt;%\n  summarise(\n    car_mean = mean(accessible_restaurants_car),\n    car_min = min(accessible_restaurants_car),\n    car_max = max(accessible_restaurants_car),\n    pt_mean = mean(accessible_restaurants_pt),\n    pt_min = min(accessible_restaurants_pt),\n    pt_max = max(accessible_restaurants_pt)\n  )\n\n\n\n\nMetric\nCar (10 min)\nPublic Transit (20 min)\n\n\n\n\nMean\n44.8\n24.6\n\n\nMin\n18\n0\n\n\nMax\n78\n52",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#key-observations",
+    "href": "2-4-many-to-many.html#key-observations",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.8 Key Observations",
+    "text": "7.8 Key Observations\nFrom many-to-many testing:\n✓ R5R successfully handles large N×M matrices (12,000 OD pairs)\n✓ Time thresholds effectively filter results: - Only OD pairs within threshold are computed - Reduces computation and focuses on relevant opportunities\n✓ Cumulative opportunity measures work well: - Simple count of accessible destinations - Can be extended to weighted measures (e.g., by quality)\n✓ Mode-specific thresholds capture realistic constraints: - Longer thresholds for slower modes make sense - Still reveal substantial accessibility gaps\n✓ Spatial heterogeneity is evident: - Some tracts have zero access by public transit - Car accessibility more spatially uniform\n✓ Computation remains tractable: - ~3 minutes for 12,000 OD pairs - Scalable to larger regions with parallelization",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "2-4-many-to-many.html#pilot-test-conclusion",
+    "href": "2-4-many-to-many.html#pilot-test-conclusion",
+    "title": "7  Many-to-Many: Service Coverage",
+    "section": "7.9 Pilot Test Conclusion",
+    "text": "7.9 Pilot Test Conclusion\nThe three routing patterns demonstrate that R5R successfully handles:\n\nOne-to-one: Detailed route validation with segment information\nOne-to-many: Travel time matrices to single destinations\nMany-to-many: Large-scale accessibility calculations\n\nAll three patterns produce spatially coherent results with reasonable computation times. The workflow is ready for application to larger case studies.\nNext steps: Apply this validated workflow to longitudinal bank accessibility analysis (Chapter 7).",
+    "crumbs": [
+      "Methodology Development",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Many-to-Many: Service Coverage</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html",
+    "href": "3-1-case-study.html",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "",
+    "text": "8.1 Introduction\nThis chapter presents the research context and study design for analyzing how bank accessibility has changed across South Korea due to branch closures.\nWe examine national-scale accessibility changes from 2021-2023, focusing on:\nThis demonstrates scaling the R5R workflow from a single city (Part II) to nationwide analysis while maintaining computational feasibility and methodological rigor.",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#introduction",
+    "href": "3-1-case-study.html#introduction",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "",
+    "text": "Spatial inequality in banking access across 50,000+ census districts\nDifferences between car and transit accessibility\nDifferential impacts on elderly vs. general populations\nGeographic patterns of financial service deserts",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#research-context",
+    "href": "3-1-case-study.html#research-context",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.2 Research Context",
+    "text": "8.2 Research Context\n\n8.2.1 The Problem: Accelerating Branch Closures\nKorean bank branches declined 24% over a decade (7,673 in 2012 → 5,800 in 2022), driven by digital banking adoption and cost pressures12. Meanwhile, internet banking surged from 53% to 78% of transactions, while in-person services dropped from 9% to 6%.\n\n\n8.2.2 Why This Matters: Spatial and Social Inequity\nThree critical concerns emerge3:\n\nAge disparity: Elderly (70+) use bank branches 2× more than average (54% vs 25%)4\nGeographic inequality: Longest travel distances (&gt;20km) concentrated in aged rural areas (26 of top 30 regions are super-aged)5\nService gaps: Non-bank institutions (savings banks, cooperatives) show similar spatial bias—closures cannot be compensated6\n\n\n\n8.2.3 Research Questions\nGiven this context, we ask:\n\nWhere have accessibility declines been most severe?\nWho is most affected (elderly, rural, transit-dependent populations)?\nHow much has multimodal accessibility changed over time?\nWhat spatial patterns distinguish banking deserts from well-served areas?\n\n\n\n\n\n\n\nNote📚 Detailed Policy Background (Click to Expand)\n\n\n\n\n\n\n8.2.4 Regulatory Responses\n2023 Bank Branch Closure Enhancement Plan7:\n\nStrengthened pre-closure impact assessments with external experts\nMandatory consultation with local communities before closure\nRequired alternative arrangements (partner branches, ATMs, mobile banking education)\nPost-closure follow-up evaluation\n\n2025 Banking Agency System8:\n\nAllows non-bank entities (post offices, mutual cooperatives) to provide bank services\nAims to expand face-to-face service channels\nLimitations: Cannot fully replicate branch service quality and range\n\n\n\n8.2.5 Academic Evidence\nLee (2025) provides the first systematic spatial analysis of Korean bank branch distribution9:\n\nMethodology: Analyzed travel distances to nearest bank using Voronoi tessellation\nKey finding: Super-aged regions (65+ &gt;20%) systematically have longer access distances\nInsight: Non-bank financial institutions exhibit similar spatial inequalities\nPolicy implication: Holistic evaluation needed—delegated services alone insufficient\n\n\n\n8.2.6 International Context\nBank branch closures are a global phenomenon affecting developed economies:\n\nUnited States: “Banking deserts” identified in rural and low-income urban areas\nCanada: Distance-based closure regulations (10km threshold for rural areas)\nAustralia: Tiered notification requirements (12 weeks for &gt;20km access)\nUnited Kingdom: Banking hubs and post office partnerships to maintain access\n\nKorea’s challenge is compounded by rapid aging (super-aged society by 2025) and extreme geographic concentration (50% of population in Seoul Capital Area).\n\n\n\n\n\n\n\n\n\n\nTip💡 Why This Analysis Uses R5R\n\n\n\nTraditional GIS-based accessibility studies face limitations:\n\nStatic networks: Cannot model time-varying transit schedules\nMode siloes: Car and transit analyzed separately\nComputational cost: National-scale many-to-many routing infeasible\n\nR5R solves these:\n\n✓ Multimodal routing with realistic transit schedules (GTFS)\n✓ Raptor algorithm enables massive-scale many-to-many OD matrices\n✓ Parallel processing via spatial partitioning (province-level chunks)\n\nSee Chapters 3-6 for workflow validation.",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#study-design-overview",
+    "href": "3-1-case-study.html#study-design-overview",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.3 Study Design Overview",
+    "text": "8.3 Study Design Overview\n\n8.3.1 Geographic Scope\nCoverage: All of South Korea (nationwide analysis)\nWhy national scale?\n\nBanking regulations are uniform across regions\nBranch closures follow nationwide strategic decisions\nUrban-rural disparities require comprehensive coverage\n\nSpatial resolution:\n\nOrigins: ~50,000 census enumeration districts (집계구)\nAnalysis levels: District → Eup/Myeon/Dong → Si/Gun/Gu → Province\nCoverage: 17 provinces/metropolitan cities, ~250 Si/Gun/Gu\n\n\n\n8.3.2 Temporal Scope\n\nPeriod: 2021-2023 (6 semi-annual snapshots)\nFrequency: June and December of each year\nAlignment: Matches GTFS transit data releases\n\n\n\n8.3.3 Comparison with Pilot Study\n\n\n\nAspect\nPilot (Part II)\nApplication (Part III)\n\n\n\n\nGeography\nPaldal-gu (1 district)\nAll of South Korea\n\n\nOrigins\n~80 census tracts\n~50,000 enum. districts\n\n\nDestinations\n~20 bank branches\n~5,000 branches\n\n\nTime periods\n1 snapshot\n6 snapshots (2021-2023)\n\n\nOD pairs\n~1,600\n~250 million\n\n\nProcessing\nMinutes\nHours/Days",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#data-sources-overview",
+    "href": "3-1-case-study.html#data-sources-overview",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.4 Data Sources Overview",
+    "text": "8.4 Data Sources Overview\nThis analysis integrates four primary datasets:\n\n\n\n\n\n\n\n\n\nDataset\nSource\nTemporal Coverage\nUse in Analysis\n\n\n\n\nBank branches\nKorea Federation of Banks\n2021-2023 (semi-annual)\nDestinations for accessibility\n\n\nTransit networks\nKTDB GTFS\n2022-2023 (annual)\nTransit routing via R5R\n\n\nRoad networks\nOpenStreetMap\n2021-2023 (annual)\nCar routing via R5R\n\n\nCensus data\nSGIS\n2021-2023 (annual)\nOrigin points + demographics\n\n\n\n\n8.4.1 Key Data Challenges\n1. Geocoding - Bank addresses reported in varying formats across time - Requires standardization and quality control\n2. Temporal Alignment - Bank data: semi-annual (June/Dec) - Transit GTFS: annual (March) - OSM road networks: annual snapshots - Solution: Match to nearest available dates\n3. Spatial Coverage - Ensure all origins/destinations fall within network bounds - Handle islands and remote areas with limited transit\n4. Data Volume - 5,000+ bank branches × 13 time periods = 65,000 records - 50,000+ enumeration districts - Multiple GTFS feeds spanning all provinces\n\n\n\n\n\n\nNote📦 Detailed Data Processing\n\n\n\nData acquisition, geocoding, validation, and formatting workflows are covered in Chapter 8: Preparing Analysis Datasets.\nFull preprocessing code available at: GitHub repository",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#analytical-framework",
+    "href": "3-1-case-study.html#analytical-framework",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.5 Analytical Framework",
+    "text": "8.5 Analytical Framework\n\n8.5.1 Core Metrics\nWe calculate travel time from each enumeration district to the nearest bank branch using multimodal routing:\nTransport modes analyzed:\n\nPublic transit + walking: Realistic accessibility for transit-dependent populations\nPrivate car: Benchmark for car-owning households\n\nKey indicators:\n\nMinimum travel time: Time to nearest bank branch\nNumber of banks within X minutes: Service redundancy measure\nTemporal change: Δ accessibility from 2021 to 2023\n\n\n\n8.5.2 Methodological Approach\nThe validated R5R workflow from Part II is adapted for national scale with three key strategies:\n1. Spatial Partitioning (Chapter 9)\n\nDivide national analysis into province-level chunks\nProcess each province independently to manage memory\nCombine results after completion\n\n2. Parallel Processing (Chapter 9)\n\nUse {future} and {furrr} for multi-core execution\nConfigure workers based on available computational resources\nMonitor progress and handle errors gracefully\n\n3. Hierarchical Aggregation (Chapter 10)\n\nCalculate district-level accessibility (finest resolution)\nAggregate to Eup/Myeon/Dong using population weights\nFurther aggregate to Si/Gun/Gu and Province levels\nPreserve both fine-grained detail and policy-relevant summaries\n\n\n\n8.5.3 Analysis Workflow\ngraph TD\n    A[Bank locations&lt;br/&gt;GTFS transit&lt;br/&gt;OSM roads&lt;br/&gt;Census data] --&gt; B[Data Preparation&lt;br/&gt;Chapter 8]\n    B --&gt; C[Province-level&lt;br/&gt;spatial partitions]\n    C --&gt; D[Parallel routing&lt;br/&gt;R5R many-to-many&lt;br/&gt;Chapter 9]\n    D --&gt; E[District-level&lt;br/&gt;accessibility]\n    E --&gt; F[Population-weighted&lt;br/&gt;aggregation&lt;br/&gt;Chapter 10]\n    F --&gt; G[Maps & insights&lt;br/&gt;Chapter 10]\n\n\n8.5.4 Travel Time Thresholds\nWe define “accessible” based on realistic trip expectations:\n\nPublic transit + walking: 30 minutes (urban standard)\nPrivate car: 15 minutes (comparable to transit in well-served areas)\n\nRationale: Bank visits are purposeful trips that justify longer travel times compared to daily services (groceries, schools).",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#preview-of-results",
+    "href": "3-1-case-study.html#preview-of-results",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.6 Preview of Results",
+    "text": "8.6 Preview of Results\nDetailed results, visualizations, and policy implications are presented in Chapter 10: Results and Visualization.\nKey analyses will include:\nSpatial patterns:\n\nWhich regions have highest/lowest banking accessibility?\nIdentification of “banking deserts” (low accessibility zones)\nUrban-rural accessibility gaps\n\nTemporal changes:\n\nHow has accessibility changed from 2021 to 2023?\nWhich areas experienced greatest declines?\nWere branch closures concentrated in specific regions?\n\nDemographic equity:\n\nAccessibility for elderly populations vs general population\nTransit-dependent vs car-owning households\nVulnerable populations affected by closures\n\nPolicy relevance:\n\nEvidence for branch closure approval processes\nSpatial targeting for alternative service provision\nTransit investment priorities",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#reproducibility",
+    "href": "3-1-case-study.html#reproducibility",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.7 Reproducibility",
+    "text": "8.7 Reproducibility\nAll analysis code and data are openly available:\n\nGitHub repository: github.com/urbanlab-seoul/bank-closure-analysis\nData sources: Listed in Chapter 8\nQuarto book: This book itself is the reproducible documentation",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#summary",
+    "href": "3-1-case-study.html#summary",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "8.8 Summary",
+    "text": "8.8 Summary\nThis chapter introduced a real-world application of the R5R accessibility workflow: analyzing how bank branch closures affect financial service access across South Korea.\n\n8.8.1 What We Covered\nResearch context:\n\nBank branches declined 24% over a decade (2012-2022)\nElderly populations disproportionately rely on in-person banking\nGeographic inequalities concentrated in aged rural areas\n\nStudy design:\n\nScale: Entire South Korea (50,000+ enumeration districts)\nTime: 2021-2023 (6 semi-annual snapshots)\nData: Bank locations, GTFS transit, OSM roads, census demographics\n\nAnalytical framework:\n\nMultimodal routing (transit + car) via R5R\nSpatial partitioning and parallel processing for computational efficiency\nHierarchical aggregation to multiple administrative levels\n\n\n\n8.8.2 Next Steps\nThe following chapters implement this analysis:\n\nChapter 8: Data preparation and quality control\nChapter 9: Large-scale routing workflow\nChapter 10: Results, visualization, and policy implications\n\n\n\n8.8.3 Key Takeaway\nThe validated pilot workflow (Part II) successfully scales to national analysis by combining:\n\n✓ Spatial partitioning (manage memory)\n✓ Parallel processing (reduce computation time)\n✓ Incremental saving (enable error recovery)\n\nThis demonstrates that R5R-based accessibility analysis can scale from neighborhood studies to national policy questions while remaining computationally feasible and methodologically rigorous.",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-1-case-study.html#footnotes",
+    "href": "3-1-case-study.html#footnotes",
+    "title": "8  Case Study: Bank Accessibility Analysis",
+    "section": "",
+    "text": "금융위원회·금융감독원·은행연합회 (2023). 은행 점포폐쇄 내실화 방안. 제5차 은행권 경영·영업 관행·제도 개선 TF 실무작업반.↩︎\n금융위원회 (2025). 소비자의 금융접근성을 제고해 나가겠습니다: 은행대리업 도입 등 은행업무 위탁 활성화 방안. 보도자료.↩︎\n이시연 (2025). 국내 금융기관 오프라인 점포 감소 문제와 시사점. KIF 금융브리프, 34(7), 3-8. 한국금융연구원.↩︎\n금융위원회·금융감독원·은행연합회 (2023). 은행 점포폐쇄 내실화 방안. 제5차 은행권 경영·영업 관행·제도 개선 TF 실무작업반.↩︎\n이시연 (2025). 국내 금융기관 오프라인 점포 감소 문제와 시사점. KIF 금융브리프, 34(7), 3-8. 한국금융연구원.↩︎\n이시연 (2025). 국내 금융기관 오프라인 점포 감소 문제와 시사점. KIF 금융브리프, 34(7), 3-8. 한국금융연구원.↩︎\n금융위원회·금융감독원·은행연합회 (2023). 은행 점포폐쇄 내실화 방안. 제5차 은행권 경영·영업 관행·제도 개선 TF 실무작업반.↩︎\n금융위원회 (2025). 소비자의 금융접근성을 제고해 나가겠습니다: 은행대리업 도입 등 은행업무 위탁 활성화 방안. 보도자료.↩︎\n이시연 (2025). 국내 금융기관 오프라인 점포 감소 문제와 시사점. KIF 금융브리프, 34(7), 3-8. 한국금융연구원.↩︎",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Case Study: Bank Accessibility Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "3-2-data-preparation.html",
+    "href": "3-2-data-preparation.html",
+    "title": "9  Preparing Analysis Datasets",
+    "section": "",
+    "text": "9.1 Introduction\nWith the research context established in Chapter 7, we now turn to data preparation—the unglamorous but critical foundation of large-scale accessibility analysis.\nThis chapter covers:\nUnlike the pilot study (Chapter 2), where data came from a single source and time period, the national case study requires harmonizing multiple heterogeneous datasets with different formats, temporal coverage, and spatial precision.",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Preparing Analysis Datasets</span>"
+    ]
+  },
+  {
+    "objectID": "3-2-data-preparation.html#introduction",
+    "href": "3-2-data-preparation.html#introduction",
+    "title": "9  Preparing Analysis Datasets",
+    "section": "",
+    "text": "Bank location data: Geocoding 5,000+ branches across 13 time periods\nTransit networks: Preparing national GTFS feeds for R5R\nCensus geographies: Processing enumeration district boundaries and demographics\nData integration: Creating analysis-ready origin-destination pairs",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Preparing Analysis Datasets</span>"
+    ]
+  },
+  {
+    "objectID": "3-2-data-preparation.html#why-this-matters",
+    "href": "3-2-data-preparation.html#why-this-matters",
+    "title": "9  Preparing Analysis Datasets",
+    "section": "9.2 Why This Matters",
+    "text": "9.2 Why This Matters\nPoor data preparation causes:\n❌ Geocoding errors → Routes to wrong locations ❌ Temporal mismatches → Transit schedules don’t match analysis dates ❌ Boundary inconsistencies → Origins/destinations outside network coverage ❌ Missing values → Incomplete accessibility estimates\nQuality control at this stage prevents garbage-in-garbage-out problems downstream.",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Preparing Analysis Datasets</span>"
+    ]
+  },
+  {
+    "objectID": "3-2-data-preparation.html#learning-objectives",
+    "href": "3-2-data-preparation.html#learning-objectives",
+    "title": "9  Preparing Analysis Datasets",
+    "section": "9.3 Learning Objectives",
+    "text": "9.3 Learning Objectives\nBy the end of this chapter, you will be able to:\n\nProcess semi-annual bank branch reports into geocoded point data\nValidate and prepare national GTFS feeds for R5R\nGenerate origin points from census boundaries\nImplement data quality checks and documentation\nStructure datasets for efficient large-scale routing",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Preparing Analysis Datasets</span>"
+    ]
+  },
+  {
+    "objectID": "3-3-routing-workflow.html",
+    "href": "3-3-routing-workflow.html",
+    "title": "10  Routing Workflow at Scale",
+    "section": "",
+    "text": "10.1 Introduction\nWith analysis-ready datasets prepared (Chapter 8), we now face the computational challenge: routing 250+ million origin-destination pairs across three time periods.\nThe core R5R workflow from Part II remains the same:\nBut at national scale, we must address:\nThis chapter presents spatial partitioning and parallel processing strategies that make national-scale routing computationally feasible.",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Routing Workflow at Scale</span>"
+    ]
+  },
+  {
+    "objectID": "3-3-routing-workflow.html#introduction",
+    "href": "3-3-routing-workflow.html#introduction",
+    "title": "10  Routing Workflow at Scale",
+    "section": "",
+    "text": "travel_time_matrix(r5r_core, origins, destinations, mode, departure_datetime, ...)\n\n\nMemory constraints: Cannot load 250M OD pairs into RAM simultaneously\nComputational cost: Single-threaded processing would take weeks\nNetwork heterogeneity: Urban areas have rich transit; rural areas have minimal service\nError recovery: Partial failures should not require full re-runs",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Routing Workflow at Scale</span>"
+    ]
+  },
+  {
+    "objectID": "3-3-routing-workflow.html#key-strategies",
+    "href": "3-3-routing-workflow.html#key-strategies",
+    "title": "10  Routing Workflow at Scale",
+    "section": "10.2 Key Strategies",
+    "text": "10.2 Key Strategies\n1. Spatial Partitioning - Split national analysis into province-level chunks - Process each chunk independently - Combine results after routing completes\n2. Parallel Processing - Use {future} and {furrr} for multi-core execution - Configure workers based on available RAM - Implement progress tracking and logging\n3. Incremental Saving - Write results after each chunk completes - Enable restart from partial completion - Avoid memory overflow from accumulated results",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Routing Workflow at Scale</span>"
+    ]
+  },
+  {
+    "objectID": "3-3-routing-workflow.html#learning-objectives",
+    "href": "3-3-routing-workflow.html#learning-objectives",
+    "title": "10  Routing Workflow at Scale",
+    "section": "10.3 Learning Objectives",
+    "text": "10.3 Learning Objectives\nBy the end of this chapter, you will be able to:\n\nImplement spatial partitioning for large-scale routing\nConfigure parallel processing with {future} and {furrr}\nOptimize memory usage for massive OD matrices\nMonitor progress and handle computational errors\nAdapt the workflow to different computational environments (laptop, server, cloud)",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Routing Workflow at Scale</span>"
+    ]
+  },
+  {
+    "objectID": "3-4-results-visualization.html",
+    "href": "3-4-results-visualization.html",
+    "title": "11  Results and Visualization",
+    "section": "",
+    "text": "11.1 Introduction\nWith routing complete (Chapter 9), we now have enumeration-district-level accessibility estimates for 50,000+ locations across three time periods. The final step is transforming raw travel times into policy-relevant insights.\nThis chapter covers:\n1. Spatial Aggregation - Population-weighted aggregation to Eup/Myeon/Dong and Si/Gun/Gu - Preserving demographic representativeness - Handling boundary changes across time periods\n2. Temporal Change Detection - Calculating accessibility changes (2021 vs 2023) - Identifying areas with largest declines - Statistical significance testing\n3. Visualization Strategies - Choropleth maps of banking accessibility - Temporal comparison (small multiples, difference maps) - Demographic disparities (elderly vs general population) - Interactive web maps for exploration\n4. Policy Interpretation - Identifying “banking deserts” (low accessibility zones) - Quantifying vulnerable populations affected - Connecting findings to policy context (Chapter 7) - Limitations and caveats",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Results and Visualization</span>"
+    ]
+  },
+  {
+    "objectID": "3-4-results-visualization.html#from-numbers-to-narrative",
+    "href": "3-4-results-visualization.html#from-numbers-to-narrative",
+    "title": "11  Results and Visualization",
+    "section": "11.2 From Numbers to Narrative",
+    "text": "11.2 From Numbers to Narrative\nRaw accessibility metrics are not self-explanatory. Effective communication requires:\n✓ Context: How do current levels compare to past trends or other regions? ✓ Equity lens: Who is most affected by accessibility gaps? ✓ Actionability: What can policymakers do with this information?",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Results and Visualization</span>"
+    ]
+  },
+  {
+    "objectID": "3-4-results-visualization.html#learning-objectives",
+    "href": "3-4-results-visualization.html#learning-objectives",
+    "title": "11  Results and Visualization",
+    "section": "11.3 Learning Objectives",
+    "text": "11.3 Learning Objectives\nBy the end of this chapter, you will be able to:\n\nAggregate enumeration district results to administrative units\nCalculate population-weighted accessibility indicators\nDetect temporal changes and spatial inequalities\nCreate publication-quality maps and visualizations\nInterpret accessibility results for policy audiences\nExport results for further analysis or reporting",
+    "crumbs": [
+      "Application",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Results and Visualization</span>"
+    ]
+  },
+  {
+    "objectID": "4-1-discussion.html",
+    "href": "4-1-discussion.html",
+    "title": "12  Discussion",
+    "section": "",
+    "text": "12.1 Introduction\nThis chapter reflects on the methods, tools, and approaches presented throughout the book. We will discuss the strengths and limitations of the open-source accessibility modeling framework, compare it to alternative approaches, and consider future directions for research and practice.\nKey topics include the trade-offs between model complexity and usability, the role of open-source tools in democratizing accessibility analysis, and emerging trends in transportation modeling. We will also address common challenges practitioners face and offer guidance for overcoming them.",
+    "crumbs": [
+      "Discussion",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Discussion</span>"
+    ]
+  },
+  {
+    "objectID": "4-1-discussion.html#learning-objectives",
+    "href": "4-1-discussion.html#learning-objectives",
+    "title": "12  Discussion",
+    "section": "12.2 Learning Objectives",
+    "text": "12.2 Learning Objectives\nBy the end of this chapter, you will be able to:\n\nCritically evaluate the strengths and limitations of the presented methods\nCompare open-source approaches to commercial or proprietary alternatives\nIdentify areas for future methodological development\nUnderstand the broader context of accessibility modeling in planning practice",
+    "crumbs": [
+      "Discussion",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Discussion</span>"
+    ]
+  },
+  {
+    "objectID": "4-2-conclusion.html",
+    "href": "4-2-conclusion.html",
+    "title": "13  Conclusion",
+    "section": "",
+    "text": "13.1 Introduction\nThis final chapter synthesizes the key concepts, methods, and lessons from the book. We will review the complete workflow for multi-modal accessibility modeling using open-source tools and reflect on the practical skills developed throughout the chapters.\nWe will also provide guidance on next steps for readers who want to deepen their expertise, including recommendations for further reading, online resources, and opportunities to engage with the broader community of accessibility researchers and practitioners.",
+    "crumbs": [
+      "Discussion",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  },
+  {
+    "objectID": "4-2-conclusion.html#summary-of-key-concepts",
+    "href": "4-2-conclusion.html#summary-of-key-concepts",
+    "title": "13  Conclusion",
+    "section": "13.2 Summary of Key Concepts",
+    "text": "13.2 Summary of Key Concepts\nThroughout this book, we have covered:\n\nData acquisition and preprocessing for multi-modal networks\nNetwork construction and integration of multiple transportation modes\nAccessibility calculation and interpretation\nScaling workflows for large-scale analysis\nPractical application to real-world planning challenges",
+    "crumbs": [
+      "Discussion",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  },
+  {
+    "objectID": "4-2-conclusion.html#next-steps",
+    "href": "4-2-conclusion.html#next-steps",
+    "title": "13  Conclusion",
+    "section": "13.3 Next Steps",
+    "text": "13.3 Next Steps\nAs you continue your journey in accessibility modeling, consider:\n\nApplying these methods to your own study areas and research questions\nContributing to open-source transportation analysis tools\nEngaging with the community through conferences, workshops, and online forums\nExploring advanced topics such as dynamic accessibility, equity metrics, and scenario planning",
+    "crumbs": [
+      "Discussion",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  },
+  {
+    "objectID": "4-2-conclusion.html#final-thoughts",
+    "href": "4-2-conclusion.html#final-thoughts",
+    "title": "13  Conclusion",
+    "section": "13.4 Final Thoughts",
+    "text": "13.4 Final Thoughts\nAccessibility analysis is a powerful tool for understanding and improving urban transportation systems. By using open-source tools and reproducible workflows, we can make these methods accessible to a wider audience and contribute to more equitable and sustainable cities.",
+    "crumbs": [
+      "Discussion",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  }
+]

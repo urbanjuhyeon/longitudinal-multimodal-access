@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Routing with r5r – Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./2-1-network-setup.html" rel="next">
+<link href="./1-2-multimodal-data.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-1-urban-accessibility.html">Introduction</a></li><li class="breadcrumb-item"><a href="./1-3-routing-r5r.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Routing with r5r</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-1-urban-accessibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Urban accessibility over time</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-2-multimodal-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multimodal transport data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-3-routing-r5r.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Routing with r5r</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Methodology Development</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-1-network-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Network Setup and Parameters</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-2-one-to-one.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-to-One: Route Validation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-3-one-to-many.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">One-to-Many: Transit Access</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-4-many-to-many.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Many-to-Many: Service Coverage</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Application</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-1-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Case Study: Bank Accessibility Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-2-data-preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Preparing Analysis Datasets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-3-routing-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Routing Workflow at Scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-4-results-visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Results and Visualization</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Discussion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4-1-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Discussion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4-2-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-routing-engines-matter" id="toc-why-routing-engines-matter" class="nav-link active" data-scroll-target="#why-routing-engines-matter"><span class="header-section-number">3.1</span> Why routing engines matter</a></li>
+  <li><a href="#r5-rapid-realistic-routing" id="toc-r5-rapid-realistic-routing" class="nav-link" data-scroll-target="#r5-rapid-realistic-routing"><span class="header-section-number">3.2</span> R5: Rapid Realistic Routing</a></li>
+  <li><a href="#r5r-r5-in-r" id="toc-r5r-r5-in-r" class="nav-link" data-scroll-target="#r5r-r5-in-r"><span class="header-section-number">3.3</span> r5r: R5 in R</a></li>
+  <li><a href="#how-r5r-works-a-conceptual-overview" id="toc-how-r5r-works-a-conceptual-overview" class="nav-link" data-scroll-target="#how-r5r-works-a-conceptual-overview"><span class="header-section-number">3.4</span> How r5r works: A conceptual overview</a>
+  <ul class="collapse">
+  <li><a href="#build-a-multimodal-network" id="toc-build-a-multimodal-network" class="nav-link" data-scroll-target="#build-a-multimodal-network"><span class="header-section-number">3.4.1</span> 1. Build a multimodal network</a></li>
+  <li><a href="#define-origins-and-destinations" id="toc-define-origins-and-destinations" class="nav-link" data-scroll-target="#define-origins-and-destinations"><span class="header-section-number">3.4.2</span> 2. Define origins and destinations</a></li>
+  <li><a href="#calculate-travel-times" id="toc-calculate-travel-times" class="nav-link" data-scroll-target="#calculate-travel-times"><span class="header-section-number">3.4.3</span> 3. Calculate travel times</a></li>
+  <li><a href="#calculate-accessibility" id="toc-calculate-accessibility" class="nav-link" data-scroll-target="#calculate-accessibility"><span class="header-section-number">3.4.4</span> 4. Calculate accessibility</a></li>
+  </ul></li>
+  <li><a href="#routing-patterns-for-different-questions" id="toc-routing-patterns-for-different-questions" class="nav-link" data-scroll-target="#routing-patterns-for-different-questions"><span class="header-section-number">3.5</span> Routing patterns for different questions</a></li>
+  <li><a href="#multimodal-comparisons" id="toc-multimodal-comparisons" class="nav-link" data-scroll-target="#multimodal-comparisons"><span class="header-section-number">3.6</span> Multimodal comparisons</a></li>
+  <li><a href="#longitudinal-analysis-workflow" id="toc-longitudinal-analysis-workflow" class="nav-link" data-scroll-target="#longitudinal-analysis-workflow"><span class="header-section-number">3.7</span> Longitudinal analysis workflow</a></li>
+  <li><a href="#beyond-travel-time-other-r5r-capabilities" id="toc-beyond-travel-time-other-r5r-capabilities" class="nav-link" data-scroll-target="#beyond-travel-time-other-r5r-capabilities"><span class="header-section-number">3.8</span> Beyond travel time: Other r5r capabilities</a></li>
+  <li><a href="#reproducibility-and-openness" id="toc-reproducibility-and-openness" class="nav-link" data-scroll-target="#reproducibility-and-openness"><span class="header-section-number">3.9</span> Reproducibility and openness</a></li>
+  <li><a href="#why-r" id="toc-why-r" class="nav-link" data-scroll-target="#why-r"><span class="header-section-number">3.10</span> Why R?</a></li>
+  <li><a href="#whats-next-the-structure-of-this-book" id="toc-whats-next-the-structure-of-this-book" class="nav-link" data-scroll-target="#whats-next-the-structure-of-this-book"><span class="header-section-number">3.11</span> What’s next: The structure of this book</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">3.12</span> Getting started</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-1-urban-accessibility.html">Introduction</a></li><li class="breadcrumb-item"><a href="./1-3-routing-r5r.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Routing with r5r</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-routing-r5r" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Routing with r5r</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>GTFS and OSM data provide the raw ingredients for accessibility analysis, but we need a routing engine to transform static data into dynamic travel time estimates. This chapter introduces r5r, the tool that powers the multimodal accessibility calculations throughout this book.</p>
+<section id="why-routing-engines-matter" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="why-routing-engines-matter"><span class="header-section-number">3.1</span> Why routing engines matter</h2>
+<p>Simple distance-based accessibility—measuring how many services fall within a radius—ignores transportation realities:</p>
+<ul>
+<li>A bank 2 km away by road might require a 15-minute drive or a 45-minute bus journey</li>
+<li>Two destinations equidistant from an origin can have vastly different accessibility by transit</li>
+<li>Network connectivity, traffic speeds, transit schedules, and transfer requirements shape true accessibility</li>
+</ul>
+<p><strong>Routing engines</strong> compute realistic travel times by simulating journeys through transportation networks, accounting for:</p>
+<ul>
+<li>Road network topology and speeds</li>
+<li>Transit schedules and frequencies</li>
+<li>Waiting times and transfers</li>
+<li>Mode-specific constraints (walk speed, vehicle access)</li>
+</ul>
+<p>This transforms accessibility from a geometric problem (proximity) into a network problem (reachability).</p>
+</section>
+<section id="r5-rapid-realistic-routing" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="r5-rapid-realistic-routing"><span class="header-section-number">3.2</span> R5: Rapid Realistic Routing</h2>
+<p><a href="https://github.com/conveyal/r5">R5 (Rapid Realistic Routing on Real-world and Reimagined networks)</a> is a high-performance multimodal routing engine developed by Conveyal. Written in Java, R5 specializes in:</p>
+<p><strong>Multimodal routing</strong></p>
+<ul>
+<li>Combines GTFS (transit) and OSM (streets) into a unified network</li>
+<li>Handles walk-transit-walk trip chains</li>
+<li>Supports car, transit, bicycle, and walking</li>
+</ul>
+<p><strong>Speed</strong></p>
+<ul>
+<li>Optimized algorithms for large-scale analysis</li>
+<li>Parallel computation of many-to-many travel times</li>
+<li>Designed for city-scale and regional accessibility studies</li>
+</ul>
+<p><strong>Temporal accuracy</strong></p>
+<ul>
+<li>Respects transit schedules from GTFS</li>
+<li>Accounts for waiting times and departure time windows</li>
+<li>Handles frequency-based vs schedule-based services</li>
+</ul>
+<p><strong>Open source</strong></p>
+<ul>
+<li>Free to use and modify</li>
+<li>Active development community</li>
+<li>Well-documented and validated</li>
+</ul>
+<p>R5 has become a standard tool in transport research and practice, powering accessibility analyses for transportation agencies, researchers, and advocacy organizations worldwide.</p>
+</section>
+<section id="r5r-r5-in-r" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="r5r-r5-in-r"><span class="header-section-number">3.3</span> r5r: R5 in R</h2>
+<p>While R5 is powerful, it’s a Java application requiring technical setup and command-line interaction. The <a href="https://ipeagit.github.io/r5r/">r5r package</a> (Pereira et al., 2021) makes R5 accessible to R users through a simple, intuitive interface.</p>
+<p><strong>Why r5r?</strong></p>
+<p><strong>Ease of use</strong></p>
+<ul>
+<li>Install like any R package: <code>install.packages("r5r")</code></li>
+<li>No Java configuration required (r5r handles it automatically)</li>
+<li>Familiar R syntax and data structures</li>
+</ul>
+<p><strong>Integration with R ecosystem</strong></p>
+<ul>
+<li>Works seamlessly with <code>sf</code> for spatial data</li>
+<li>Outputs data.frames compatible with <code>tidyverse</code> workflows</li>
+<li>Integrates with <code>ggplot2</code> for visualization</li>
+</ul>
+<p><strong>Reproducible workflows</strong></p>
+<ul>
+<li>All code in R scripts or Quarto documents</li>
+<li>Facilitates version control and collaboration</li>
+<li>Lowers barriers for replication studies</li>
+</ul>
+<p><strong>Active development</strong></p>
+<ul>
+<li>Maintained by researchers at Ipea (Brazil) and collaborators</li>
+<li>Regular updates incorporating R5 improvements</li>
+<li>Strong documentation and community support</li>
+</ul>
+<p>r5r has been widely adopted in transport geography and urban planning research, enabling reproducible multimodal accessibility studies across diverse contexts (see Pereira &amp; Herszenhut, 2023 for an extensive guide).</p>
+</section>
+<section id="how-r5r-works-a-conceptual-overview" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="how-r5r-works-a-conceptual-overview"><span class="header-section-number">3.4</span> How r5r works: A conceptual overview</h2>
+<p>r5r operates through a simple workflow:</p>
+<section id="build-a-multimodal-network" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="build-a-multimodal-network"><span class="header-section-number">3.4.1</span> 1. Build a multimodal network</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(r5r)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>r5r_core <span class="ot">&lt;-</span> <span class="fu">setup_r5</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_path =</span> <span class="st">"path/to/data"</span>,  <span class="co"># Folder with GTFS .zip and OSM .pbf</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This single function:</p>
+<ul>
+<li>Loads GTFS files (transit routes, stops, schedules)</li>
+<li>Loads OSM <code>.pbf</code> file (street network)</li>
+<li>Constructs a routable multimodal graph</li>
+<li>Saves a <code>network.dat</code> file for reuse</li>
+</ul>
+<p>The <code>r5r_core</code> object is a connection to the R5 Java backend, ready for routing queries.</p>
+</section>
+<section id="define-origins-and-destinations" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="define-origins-and-destinations"><span class="header-section-number">3.4.2</span> 2. Define origins and destinations</h3>
+<p>Origins and destinations are point locations with coordinates:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>origins <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="st">"home_1"</span>, <span class="st">"home_2"</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">lon =</span> <span class="fu">c</span>(<span class="fl">126.9780</span>, <span class="fl">126.9850</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">37.5665</span>, <span class="fl">37.5700</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>destinations <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="st">"bank_1"</span>, <span class="st">"bank_2"</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lon =</span> <span class="fu">c</span>(<span class="fl">127.0000</span>, <span class="fl">127.0100</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">37.5750</span>, <span class="fl">37.5800</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="calculate-travel-times" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="calculate-travel-times"><span class="header-section-number">3.4.3</span> 3. Calculate travel times</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>travel_times <span class="ot">&lt;-</span> <span class="fu">travel_time_matrix</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r5r_core =</span> r5r_core,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">origins =</span> origins,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">destinations =</span> destinations,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">departure_datetime =</span> <span class="fu">as.POSIXct</span>(<span class="st">"2021-06-15 09:00:00"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_trip_duration =</span> <span class="dv">120</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>r5r computes travel times for all origin-destination pairs, respecting:</p>
+<ul>
+<li>Transit schedules on the specified date/time</li>
+<li>Maximum trip duration constraint</li>
+<li>Specified mode(s)</li>
+</ul>
+<p>The output is a tidy data.frame:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>from_id</th>
+<th>to_id</th>
+<th>travel_time_p50</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>home_1</td>
+<td>bank_1</td>
+<td>28</td>
+</tr>
+<tr class="even">
+<td>home_1</td>
+<td>bank_2</td>
+<td>35</td>
+</tr>
+<tr class="odd">
+<td>home_2</td>
+<td>bank_1</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>home_2</td>
+<td>bank_2</td>
+<td>30</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="calculate-accessibility" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="calculate-accessibility"><span class="header-section-number">3.4.4</span> 4. Calculate accessibility</h3>
+<p>For cumulative opportunity accessibility (how many destinations are reachable within a time threshold):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>accessibility <span class="ot">&lt;-</span> <span class="fu">accessibility</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">r5r_core =</span> r5r_core,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">origins =</span> origins,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">destinations =</span> destinations,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">departure_datetime =</span> <span class="fu">as.POSIXct</span>(<span class="st">"2021-06-15 09:00:00"</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cutoffs =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">60</span>)  <span class="co"># minutes</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Output counts how many destinations each origin can reach:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>id</th>
+<th>accessibility_30min</th>
+<th>accessibility_60min</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>home_1</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>home_2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="routing-patterns-for-different-questions" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="routing-patterns-for-different-questions"><span class="header-section-number">3.5</span> Routing patterns for different questions</h2>
+<p>r5r supports several routing patterns suited to different research questions:</p>
+<p><strong>One-to-one routing</strong></p>
+<ul>
+<li>Calculate travel time between a single origin and single destination</li>
+<li>Use case: Detailed route inspection, validation</li>
+<li>Function: <code>detailed_itineraries()</code></li>
+</ul>
+<p><strong>One-to-many routing</strong></p>
+<ul>
+<li>Calculate travel times from one origin to many destinations</li>
+<li>Use case: Individual accessibility profiles, service areas</li>
+<li>Function: <code>travel_time_matrix()</code> with one origin</li>
+</ul>
+<p><strong>Many-to-many routing</strong></p>
+<ul>
+<li>Calculate travel times for all origin-destination pairs</li>
+<li>Use case: City-wide accessibility, equity analysis</li>
+<li>Function: <code>travel_time_matrix()</code> or <code>accessibility()</code> with many origins</li>
+</ul>
+<p>This book demonstrates all three patterns:</p>
+<ul>
+<li><strong>Section 2.2</strong>: One-to-one routing (understanding travel paths)</li>
+<li><strong>Section 2.3</strong>: One-to-many routing (origin-centric accessibility)</li>
+<li><strong>Section 2.4</strong>: Many-to-many routing (population-wide analysis)</li>
+</ul>
+</section>
+<section id="multimodal-comparisons" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="multimodal-comparisons"><span class="header-section-number">3.6</span> Multimodal comparisons</h2>
+<p>A key strength of r5r is comparing accessibility across transportation modes. By running the same analysis with different <code>mode</code> parameters, we reveal modal disparities:</p>
+<p><strong>Public transit</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mode <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"WALK"</span>, <span class="st">"TRANSIT"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Private car</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mode <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"CAR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Walk only</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mode <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"WALK"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These comparisons expose equity issues: communities with excellent car accessibility but poor transit access face mobility disadvantages if they lack vehicle ownership.</p>
+</section>
+<section id="longitudinal-analysis-workflow" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="longitudinal-analysis-workflow"><span class="header-section-number">3.7</span> Longitudinal analysis workflow</h2>
+<p>For tracking accessibility over time, we repeat the routing process for each temporal snapshot:</p>
+<ol type="1">
+<li><strong>Prepare data</strong>: GTFS and OSM for each time point (e.g., 2021-06, 2021-12, 2022-06, …)</li>
+<li><strong>Build networks</strong>: <code>setup_r5()</code> for each time point’s data folder</li>
+<li><strong>Calculate accessibility</strong>: Run routing with consistent origins, destinations, and parameters</li>
+<li><strong>Compare results</strong>: Analyze how accessibility changed between time points</li>
+</ol>
+<p>Computational efficiency is critical at scale. This book develops strategies for:</p>
+<ul>
+<li>Spatial partitioning (divide-and-conquer large regions)</li>
+<li>Parallel processing (utilize multiple CPU cores)</li>
+<li>Result caching (avoid redundant calculations)</li>
+</ul>
+<p>These techniques are introduced in Section 2 (methodology) and applied in Sections 3-4 (pilot and national scales).</p>
+</section>
+<section id="beyond-travel-time-other-r5r-capabilities" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="beyond-travel-time-other-r5r-capabilities"><span class="header-section-number">3.8</span> Beyond travel time: Other r5r capabilities</h2>
+<p>While this book focuses on travel time and accessibility calculations, r5r offers additional functionality:</p>
+<ul>
+<li><strong>Detailed itineraries</strong>: Step-by-step route instructions</li>
+<li><strong>Isochrones</strong>: Polygons showing areas reachable within time thresholds</li>
+<li><strong>Expanded travel times</strong>: Monte Carlo sampling of multiple departure times</li>
+<li><strong>Custom walk/bike speeds</strong>: Adjust for different population groups</li>
+</ul>
+<p>See the <a href="https://ipeagit.github.io/r5r/">r5r documentation</a> and Pereira &amp; Herszenhut (2023) for comprehensive coverage.</p>
+</section>
+<section id="reproducibility-and-openness" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="reproducibility-and-openness"><span class="header-section-number">3.9</span> Reproducibility and openness</h2>
+<p>Using r5r aligns with open science principles:</p>
+<p><strong>Open-source tool</strong></p>
+<ul>
+<li>Free to use, no licensing costs</li>
+<li>Transparent algorithms (inspect source code)</li>
+<li>Community-driven development</li>
+</ul>
+<p><strong>Open data</strong></p>
+<ul>
+<li>Works with GTFS and OSM (freely available)</li>
+<li>No proprietary data dependencies</li>
+</ul>
+<p><strong>Reproducible workflows</strong></p>
+<ul>
+<li>All code in R scripts</li>
+<li>Results verifiable by others</li>
+<li>Facilitates peer review and replication</li>
+</ul>
+<p>This book provides complete code for every analysis, enabling readers to reproduce results and adapt workflows to their own contexts.</p>
+</section>
+<section id="why-r" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="why-r"><span class="header-section-number">3.10</span> Why R?</h2>
+<p>Beyond r5r, R offers rich ecosystem support for spatial accessibility research:</p>
+<ul>
+<li><strong>Data manipulation</strong>: <code>dplyr</code>, <code>tidyr</code>, <code>data.table</code></li>
+<li><strong>Spatial data</strong>: <code>sf</code>, <code>terra</code>, <code>mapview</code></li>
+<li><strong>Visualization</strong>: <code>ggplot2</code>, <code>tmap</code>, <code>leaflet</code></li>
+<li><strong>Parallel computing</strong>: <code>future</code>, <code>furrr</code>, <code>parallel</code></li>
+<li><strong>Reporting</strong>: Quarto, R Markdown</li>
+</ul>
+<p>This integration means analyses can flow from data acquisition through routing to visualization and reporting—all in one environment.</p>
+</section>
+<section id="whats-next-the-structure-of-this-book" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="whats-next-the-structure-of-this-book"><span class="header-section-number">3.11</span> What’s next: The structure of this book</h2>
+<p>The remaining sections build incrementally toward national-scale longitudinal accessibility analysis:</p>
+<p><strong>SECTION 2: Methodology Development</strong></p>
+<p>Chapters 4-7 develop the analytical workflow using a pilot study area (Paldal-gu, Suwon):</p>
+<ul>
+<li><strong>Chapter 4</strong>: Network setup and parameter configuration</li>
+<li><strong>Chapter 5</strong>: One-to-one routing (route inspection and validation)</li>
+<li><strong>Chapter 6</strong>: One-to-many routing (origin-specific accessibility)</li>
+<li><strong>Chapter 7</strong>: Many-to-many routing (population-wide analysis)</li>
+</ul>
+<p>This section establishes reusable code patterns and computational strategies with manageable data before scaling up.</p>
+<p><strong>SECTION 3: Pilot Application</strong></p>
+<p>Chapters 8-11 apply the methodology to the pilot area:</p>
+<ul>
+<li><strong>Chapter 8</strong>: Case study context (Paldal-gu banking landscape)</li>
+<li><strong>Chapter 9</strong>: Data preparation (GTFS, OSM, POIs for pilot)</li>
+<li><strong>Chapter 10</strong>: Routing workflow execution</li>
+<li><strong>Chapter 11</strong>: Results visualization and interpretation</li>
+</ul>
+<p>This validates the approach at a scale where outputs can be manually inspected and verified.</p>
+<p><strong>SECTION 4: National-Scale Application</strong></p>
+<p>Chapters 12-15 extend to the entire country:</p>
+<ul>
+<li><strong>Chapter 12</strong>: National case study framing</li>
+<li><strong>Chapter 13</strong>: National data preparation (50,000+ census tracts, 6 time points)</li>
+<li><strong>Chapter 14</strong>: Computational strategies (spatial partitioning, parallel processing)</li>
+<li><strong>Chapter 15</strong>: National results and policy implications</li>
+</ul>
+<p>This demonstrates how the workflow scales to research-grade analyses requiring substantial computational resources.</p>
+<p><strong>SECTION 5: Discussion and Conclusion</strong></p>
+<p>Chapters 16-17 reflect on the approach:</p>
+<ul>
+<li><strong>Chapter 16</strong>: Methodological contributions, limitations, and extensions</li>
+<li><strong>Chapter 17</strong>: Implications for research and practice</li>
+</ul>
+</section>
+<section id="getting-started" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">3.12</span> Getting started</h2>
+<p>With conceptual foundations established—understanding accessibility (Chapter 1), data sources (Chapter 2), and routing tools (Chapter 3)—we’re ready to build the analytical workflow.</p>
+<p>Section 2 begins with network setup: preparing r5r for multimodal routing with GTFS and OSM data.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./1-2-multimodal-data.html" class="pagination-link" aria-label="Multimodal transport data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multimodal transport data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./2-1-network-setup.html" class="pagination-link" aria-label="Network Setup and Parameters">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Network Setup and Parameters</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Multimodal transport data – Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./1-3-routing-r5r.html" rel="next">
+<link href="./1-1-urban-accessibility.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-1-urban-accessibility.html">Introduction</a></li><li class="breadcrumb-item"><a href="./1-2-multimodal-data.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multimodal transport data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Modeling Longitudinal Multi-Modal Accessibility: An Open-Source Workflow with R5R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-1-urban-accessibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Urban accessibility over time</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-2-multimodal-data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multimodal transport data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-3-routing-r5r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Routing with r5r</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Methodology Development</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-1-network-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Network Setup and Parameters</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-2-one-to-one.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-to-One: Route Validation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-3-one-to-many.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">One-to-Many: Transit Access</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2-4-many-to-many.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Many-to-Many: Service Coverage</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Application</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-1-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Case Study: Bank Accessibility Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-2-data-preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Preparing Analysis Datasets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-3-routing-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Routing Workflow at Scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3-4-results-visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Results and Visualization</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Discussion</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4-1-discussion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Discussion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4-2-conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#gtfs-general-transit-feed-specification" id="toc-gtfs-general-transit-feed-specification" class="nav-link active" data-scroll-target="#gtfs-general-transit-feed-specification"><span class="header-section-number">2.1</span> GTFS: General Transit Feed Specification</a>
+  <ul class="collapse">
+  <li><a href="#what-is-gtfs" id="toc-what-is-gtfs" class="nav-link" data-scroll-target="#what-is-gtfs"><span class="header-section-number">2.1.1</span> What is GTFS?</a></li>
+  <li><a href="#why-gtfs-matters-for-accessibility" id="toc-why-gtfs-matters-for-accessibility" class="nav-link" data-scroll-target="#why-gtfs-matters-for-accessibility"><span class="header-section-number">2.1.2</span> Why GTFS matters for accessibility</a></li>
+  <li><a href="#where-to-obtain-gtfs" id="toc-where-to-obtain-gtfs" class="nav-link" data-scroll-target="#where-to-obtain-gtfs"><span class="header-section-number">2.1.3</span> Where to obtain GTFS</a></li>
+  </ul></li>
+  <li><a href="#openstreetmap-collaborative-street-networks" id="toc-openstreetmap-collaborative-street-networks" class="nav-link" data-scroll-target="#openstreetmap-collaborative-street-networks"><span class="header-section-number">2.2</span> OpenStreetMap: Collaborative street networks</a>
+  <ul class="collapse">
+  <li><a href="#what-is-openstreetmap" id="toc-what-is-openstreetmap" class="nav-link" data-scroll-target="#what-is-openstreetmap"><span class="header-section-number">2.2.1</span> What is OpenStreetMap?</a></li>
+  <li><a href="#why-osm-for-accessibility" id="toc-why-osm-for-accessibility" class="nav-link" data-scroll-target="#why-osm-for-accessibility"><span class="header-section-number">2.2.2</span> Why OSM for accessibility?</a></li>
+  <li><a href="#osm-data-structure" id="toc-osm-data-structure" class="nav-link" data-scroll-target="#osm-data-structure"><span class="header-section-number">2.2.3</span> OSM data structure</a></li>
+  <li><a href="#obtaining-osm-data" id="toc-obtaining-osm-data" class="nav-link" data-scroll-target="#obtaining-osm-data"><span class="header-section-number">2.2.4</span> Obtaining OSM data</a></li>
+  </ul></li>
+  <li><a href="#gtfs-osm-complementary-data" id="toc-gtfs-osm-complementary-data" class="nav-link" data-scroll-target="#gtfs-osm-complementary-data"><span class="header-section-number">2.3</span> GTFS + OSM: Complementary data</a></li>
+  <li><a href="#temporal-dimensions-in-longitudinal-analysis" id="toc-temporal-dimensions-in-longitudinal-analysis" class="nav-link" data-scroll-target="#temporal-dimensions-in-longitudinal-analysis"><span class="header-section-number">2.4</span> Temporal dimensions in longitudinal analysis</a></li>
+  <li><a href="#data-quality-considerations" id="toc-data-quality-considerations" class="nav-link" data-scroll-target="#data-quality-considerations"><span class="header-section-number">2.5</span> Data quality considerations</a></li>
+  <li><a href="#beyond-gtfs-and-osm" id="toc-beyond-gtfs-and-osm" class="nav-link" data-scroll-target="#beyond-gtfs-and-osm"><span class="header-section-number">2.6</span> Beyond GTFS and OSM</a></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next"><span class="header-section-number">2.7</span> What’s next</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-1-urban-accessibility.html">Introduction</a></li><li class="breadcrumb-item"><a href="./1-2-multimodal-data.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multimodal transport data</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-multimodal-data" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Multimodal transport data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Multimodal accessibility analysis requires two foundational data types: public transit schedules and street network geometry. Fortunately, global standards and collaborative mapping efforts have made both increasingly available as open data.</p>
+<section id="gtfs-general-transit-feed-specification" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="gtfs-general-transit-feed-specification"><span class="header-section-number">2.1</span> GTFS: General Transit Feed Specification</h2>
+<section id="what-is-gtfs" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="what-is-gtfs"><span class="header-section-number">2.1.1</span> What is GTFS?</h3>
+<p>The General Transit Feed Specification (GTFS) is a standardized data format for public transportation schedules and geographic information. Originally developed by Google in 2005 for trip planning applications, GTFS has become the de facto international standard for representing transit systems.</p>
+<p>A GTFS dataset is a collection of text files (packaged as a <code>.zip</code> archive) containing:</p>
+<ul>
+<li><strong>Routes</strong>: Bus, metro, and train lines</li>
+<li><strong>Stops</strong>: Station and stop locations with coordinates</li>
+<li><strong>Trips</strong>: Specific vehicle journeys along routes</li>
+<li><strong>Stop times</strong>: When each trip arrives/departs each stop</li>
+<li><strong>Calendar</strong>: Service availability by date and day of week</li>
+<li><strong>Shapes</strong> (optional): Geographic paths that routes follow</li>
+</ul>
+</section>
+<section id="why-gtfs-matters-for-accessibility" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="why-gtfs-matters-for-accessibility"><span class="header-section-number">2.1.2</span> Why GTFS matters for accessibility</h3>
+<p>GTFS enables realistic transit routing because it captures temporal complexity:</p>
+<ul>
+<li><strong>Schedule accuracy</strong>: Actual departure/arrival times, not assumed frequencies</li>
+<li><strong>Service variation</strong>: Different schedules for weekday/weekend, peak/off-peak</li>
+<li><strong>Temporal validity</strong>: Calendar defines when schedules apply</li>
+<li><strong>Multimodal integration</strong>: Includes walk transfers between stops/lines</li>
+</ul>
+<p>This temporal dimension is critical for longitudinal analysis. Transit service changes—new routes, frequency adjustments, coverage expansion—are reflected in updated GTFS feeds, making it possible to track how public transport accessibility evolves.</p>
+</section>
+<section id="where-to-obtain-gtfs" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="where-to-obtain-gtfs"><span class="header-section-number">2.1.3</span> Where to obtain GTFS</h3>
+<p>GTFS availability has grown dramatically:</p>
+<p><strong>Global repositories</strong></p>
+<ul>
+<li><a href="https://database.mobilitydata.org/">Mobility Database</a>: 2,000+ feeds worldwide</li>
+<li><a href="https://transitfeeds.com/">TransitFeeds</a>: Historical and current feeds</li>
+<li>Transit agency websites: Many agencies publish GTFS directly</li>
+</ul>
+<p><strong>South Korea</strong></p>
+<ul>
+<li><a href="https://www.ktdb.go.kr/">KTDB (Korea Transport Database)</a>: National GTFS feeds</li>
+<li>Covers intercity, metropolitan, and local transit systems</li>
+<li>Available for download with registration</li>
+</ul>
+<p><strong>Temporal coverage</strong></p>
+<p>For longitudinal analysis, you need GTFS snapshots from multiple time points. Some agencies maintain archives; others require manual collection over time. The Mobility Database and TransitFeeds preserve historical versions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Data acquisition in this book
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Detailed GTFS download and preprocessing workflows for South Korea are covered in:</p>
+<ul>
+<li><strong>Section 3.2</strong>: Pilot data preparation (Paldal-gu)</li>
+<li><strong>Section 4.2</strong>: National data preparation</li>
+</ul>
+<p>Here we focus on conceptual understanding rather than step-by-step data acquisition.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="openstreetmap-collaborative-street-networks" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="openstreetmap-collaborative-street-networks"><span class="header-section-number">2.2</span> OpenStreetMap: Collaborative street networks</h2>
+<section id="what-is-openstreetmap" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="what-is-openstreetmap"><span class="header-section-number">2.2.1</span> What is OpenStreetMap?</h3>
+<p>OpenStreetMap (OSM) is a collaborative project creating a free, editable map of the world. Think of it as “Wikipedia for maps”—volunteers contribute geographic data including:</p>
+<ul>
+<li><strong>Road networks</strong>: Streets, highways, pedestrian paths, cycle lanes</li>
+<li><strong>Road attributes</strong>: Speed limits, surface types, lane counts</li>
+<li><strong>Points of interest</strong>: Buildings, amenities, landmarks</li>
+<li><strong>Administrative boundaries</strong>: City, district, neighborhood borders</li>
+</ul>
+<p>For accessibility analysis, we primarily use OSM’s street network data.</p>
+</section>
+<section id="why-osm-for-accessibility" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="why-osm-for-accessibility"><span class="header-section-number">2.2.2</span> Why OSM for accessibility?</h3>
+<p>OSM offers unique advantages over proprietary map data:</p>
+<p><strong>Open and free</strong></p>
+<ul>
+<li>No licensing costs or usage restrictions</li>
+<li>Enables reproducible research</li>
+</ul>
+<p><strong>Global coverage</strong></p>
+<ul>
+<li>Especially strong in areas without commercial mapping</li>
+<li>Community maintains and updates continuously</li>
+</ul>
+<p><strong>Rich attributes</strong></p>
+<ul>
+<li>Tags describe road types (motorway, residential, footway)</li>
+<li>Attributes enable mode-specific routing (car vs walk vs bike)</li>
+</ul>
+<p><strong>Programmable access</strong></p>
+<ul>
+<li>APIs and tools for bulk download</li>
+<li>Standard formats (.pbf, .osm) work with routing engines</li>
+</ul>
+</section>
+<section id="osm-data-structure" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="osm-data-structure"><span class="header-section-number">2.2.3</span> OSM data structure</h3>
+<p>OSM represents geography through three primitives:</p>
+<ul>
+<li><strong>Nodes</strong>: Points with latitude/longitude</li>
+<li><strong>Ways</strong>: Ordered lists of nodes forming lines or polygons</li>
+<li><strong>Relations</strong>: Logical groupings of nodes/ways (e.g., bus routes)</li>
+</ul>
+<p>For routing, we need ways representing streets, tagged with attributes like:</p>
+<ul>
+<li><code>highway=motorway</code>, <code>highway=residential</code>, <code>highway=footway</code></li>
+<li><code>maxspeed=50</code></li>
+<li><code>lanes=2</code></li>
+<li><code>surface=asphalt</code></li>
+</ul>
+</section>
+<section id="obtaining-osm-data" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="obtaining-osm-data"><span class="header-section-number">2.2.4</span> Obtaining OSM data</h3>
+<p><strong>Global extracts</strong></p>
+<ul>
+<li><a href="https://download.geofabrik.de/">Geofabrik</a>: Daily-updated country/region extracts</li>
+<li><a href="https://extract.bbbike.org/">BBBike</a>: Custom area extracts</li>
+</ul>
+<p><strong>OSM APIs</strong></p>
+<ul>
+<li>Overpass API: Custom queries for specific features</li>
+<li>osmnx (Python), osmdata (R): Programmatic access</li>
+</ul>
+<p><strong>South Korea</strong></p>
+<p>Geofabrik provides South Korea extracts updated daily in <code>.pbf</code> (Protocolbuffer Binary Format), the compact format used by routing engines.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Temporal consistency
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For longitudinal analysis, OSM presents a challenge: the database continuously updates. To ensure temporal validity:</p>
+<ul>
+<li>Download OSM extracts from dates matching your GTFS feeds</li>
+<li>Use services archiving historical OSM data (e.g., Geofabrik’s historical extracts)</li>
+<li>In practice, road network changes are slower than transit schedule changes, making minor temporal mismatches acceptable for most analyses</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="gtfs-osm-complementary-data" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="gtfs-osm-complementary-data"><span class="header-section-number">2.3</span> GTFS + OSM: Complementary data</h2>
+<p>These two data sources form a complete multimodal transport network:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 25%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data source</th>
+<th>Represents</th>
+<th>Enables routing for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GTFS</td>
+<td>Public transit routes, schedules, stops</td>
+<td>Bus, metro, train travel</td>
+</tr>
+<tr class="even">
+<td>OSM</td>
+<td>Street networks, paths</td>
+<td>Walking, cycling, driving</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration logic</strong></p>
+<p>Multimodal routing engines like R5 (discussed in Chapter 3) combine these datasets:</p>
+<ol type="1">
+<li><strong>Transit network</strong>: Constructed from GTFS stops, routes, and schedules</li>
+<li><strong>Street network</strong>: Built from OSM ways tagged for different modes</li>
+<li><strong>Transfers</strong>: Walking connections between transit stops use OSM pedestrian paths</li>
+<li><strong>Access/egress</strong>: Trips start/end with walks along OSM streets to/from transit</li>
+</ol>
+<p>For example, a public transit trip from home to a bank might involve:</p>
+<ul>
+<li>Walk from home to bus stop (OSM pedestrian network)</li>
+<li>Bus journey (GTFS schedule)</li>
+<li>Transfer walk between bus and metro (OSM + GTFS stop locations)</li>
+<li>Metro journey (GTFS schedule)</li>
+<li>Walk from metro station to bank (OSM pedestrian network)</li>
+</ul>
+</section>
+<section id="temporal-dimensions-in-longitudinal-analysis" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="temporal-dimensions-in-longitudinal-analysis"><span class="header-section-number">2.4</span> Temporal dimensions in longitudinal analysis</h2>
+<p>For longitudinal accessibility studies, we need matched GTFS and OSM snapshots at each time point:</p>
+<p><strong>This book’s temporal structure</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Year</th>
+<th>Time points</th>
+<th>GTFS source</th>
+<th>OSM source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2021</td>
+<td>June, December</td>
+<td>KTDB</td>
+<td>Geofabrik (matching dates)</td>
+</tr>
+<tr class="even">
+<td>2022</td>
+<td>June, December</td>
+<td>KTDB</td>
+<td>Geofabrik (matching dates)</td>
+</tr>
+<tr class="odd">
+<td>2023</td>
+<td>June, December</td>
+<td>KTDB</td>
+<td>Geofabrik (matching dates)</td>
+</tr>
+</tbody>
+</table>
+<p>This creates six multimodal network snapshots, enabling analysis of how accessibility changed over three years.</p>
+</section>
+<section id="data-quality-considerations" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="data-quality-considerations"><span class="header-section-number">2.5</span> Data quality considerations</h2>
+<p>Both GTFS and OSM rely on data contributions—by transit agencies and volunteers, respectively. Quality varies:</p>
+<p><strong>GTFS quality signals</strong></p>
+<ul>
+<li>Official agency feeds (higher trust)</li>
+<li>Regular updates (active maintenance)</li>
+<li>Complete shapes.txt (geographic accuracy)</li>
+<li>Validation tools (e.g., Google’s GTFS validator)</li>
+</ul>
+<p><strong>OSM quality signals</strong></p>
+<ul>
+<li>Density of contributors in the region</li>
+<li>Recency of edits</li>
+<li>Completeness of road network</li>
+<li>Attribute richness (speed limits, lanes, etc.)</li>
+</ul>
+<p><strong>South Korea data quality</strong></p>
+<p>Both GTFS (from KTDB) and OSM have excellent coverage and quality in South Korea:</p>
+<ul>
+<li>KTDB provides official, validated GTFS feeds</li>
+<li>OSM road network is comprehensive, especially in urban areas</li>
+<li>Active OSM contributor community maintains currency</li>
+</ul>
+</section>
+<section id="beyond-gtfs-and-osm" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="beyond-gtfs-and-osm"><span class="header-section-number">2.6</span> Beyond GTFS and OSM</h2>
+<p>While this book focuses on these two data sources, other data enrich accessibility analysis:</p>
+<ul>
+<li><strong>Population data</strong>: Census boundaries and counts (where people live)</li>
+<li><strong>POI data</strong>: Service locations (banks, hospitals, schools)</li>
+<li><strong>Topography</strong>: Elevation affecting walking/cycling difficulty</li>
+<li><strong>Real-time data</strong>: Live transit positions, traffic speeds</li>
+</ul>
+<p>We incorporate population and POI data in later sections. The methods presented here generalize to any accessibility analysis with GTFS and street network inputs.</p>
+</section>
+<section id="whats-next" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="whats-next"><span class="header-section-number">2.7</span> What’s next</h2>
+<p>Understanding GTFS and OSM as standardized, open data sources is essential context. But how do we actually use these data to calculate travel times and accessibility? Chapter 3 introduces r5r, the routing engine that transforms GTFS and OSM into actionable multimodal accessibility estimates.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./1-1-urban-accessibility.html" class="pagination-link" aria-label="Urban accessibility over time">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Urban accessibility over time</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./1-3-routing-r5r.html" class="pagination-link" aria-label="Routing with r5r">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Routing with r5r</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

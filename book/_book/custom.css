@@ -1,0 +1,16 @@
+/* Import JetBrains Mono font */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Apply JetBrains Mono for code, D2Coding for Korean fallback */
+code, pre, .sourceCode {
+  font-family: 'JetBrains Mono', 'D2Coding', 'D2CodingLigature', monospace !important;
+  font-variant-ligatures: normal;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* Ensure ligatures work in code cells */
+div.sourceCode pre code {
+  font-family: 'JetBrains Mono', 'D2Coding', 'D2CodingLigature', monospace !important;
+  font-variant-ligatures: normal;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
